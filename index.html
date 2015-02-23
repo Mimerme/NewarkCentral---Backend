@@ -1,11 +1,16 @@
 <!doctype html>
 <html>
   <head>
+        <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+
     <title>Socket.IO chat</title>
     <style>
       * { margin: 0; padding: 0; box-sizing: border-box; }
       body { font: 13px Helvetica, Arial; }
-      form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
+      form { background: #000; padding: 10px; position: fixed; bottom: 0; width: 100%;}
       form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
       form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
       #messages { list-style-type: none; margin: 0; padding: 0; }
@@ -16,18 +21,36 @@
   <body>
     <ul id="messages"></ul>
     <form action="">
-      <input id="m" autocomplete="off" /><button>Send</button>
+      <input id="m" autocomplete="off" /><button class="btn btn-lg btn-primary">Send</button>
     </form>
     <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
-    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
     <script>
       var socket = io();
+      var nickname = prompt("Enter the nickname you wish to use");
+      if(nickname == null){
+        alert("Nickname cannot be blank");
+      }
+      else{
+        socket.emit('user join', nickname);
+      }
+
+
+
       $('form').submit(function(){
-        socket.emit('chat message', $('#m').val());
+        socket.emit('chat message', $('#m').val(), nickname);
         $('#m').val('');
         return false;
       });
-      socket.on('chat message', function(msg){
+      socket.on('chat message', function(msg, nick, timestamp){
+        $('#messages').append($('<li>').text(msg).append($('<div>').css({
+          'text-align': 'right',
+           'opacity': 0.4
+      }).text('Sent by '+ nick  + ' @ ' + timestamp)));
+      });
+      socket.on('server message', function(msg){
+        $('#messages').append($('<li>').text(msg).css('color', '#848484'));
+      });
+      socket.on('user join', function(msg){
         $('#messages').append($('<li>').text(msg));
       });
     </script>
