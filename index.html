@@ -16,10 +16,37 @@
       #messages { list-style-type: none; margin: 0; padding: 0; }
       #messages li { padding: 5px 10px; }
       #messages li:nth-child(odd) { background: #eee; }
+      .right {
+       border-right: 1px solid #ccc;
+      }
+      .box-content {
+      display: inline-block;
+      width: 200px;
+      padding: 10px;
+      color: #000;
+      }
+      .container-content {
+      display: inline-block;
+      padding: 10px;
+      color: #000;
+      }
+      .user{
+      padding-top: 10px;
+      padding-bottom: 10px;
+      }
+
     </style>
   </head>
   <body>
-    <ul id="messages"></ul>
+
+<div class="col-sm-1 col-md-1 sidebar box-content right" id='userList'>
+          <ul class="nav nav-sidebar">
+            <p1><b>Users in this chatroom</b></h1>
+          </ul></div>    
+<div class="col-sm-9 col-md-9 sidebar container-content right">
+  <ul id="messages"></ul>
+    </div>
+
     <form action="">
       <input id="m" autocomplete="off" /><button class="btn btn-lg btn-primary">Send</button>
     </form>
@@ -50,8 +77,8 @@
       socket.on('server message', function(msg){
         $('#messages').append($('<li>').text(msg).css('color', '#848484'));
       });
-      socket.on('user join', function(msg){
-        $('#messages').append($('<li>').text(msg));
+      socket.on('user join', function(user){
+        $('#userList').append($('<li>').text(user));
       });
     </script>
   </body>

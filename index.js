@@ -25,6 +25,7 @@ io.on('connection', function(socket){
   socket.on('user join', function(nick){
   	connectedUsers.push(nick.toString());
   	  io.emit('server message', 'User ' + nick + ' has joined');
+  	  io.emit('user join', nick);
   });
 });
 

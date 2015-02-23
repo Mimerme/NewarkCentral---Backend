@@ -1,0 +1,13 @@
+.right {
+    border-right: 1px solid #ccc;
+}
+.box-content {
+    display: inline-block;
+    width: 200px;
+    padding: 10px;
+    color: #000;
+}
+.user{
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
