@@ -54,11 +54,13 @@
     <script>
       var socket = io();
       var nickname = prompt("Enter the nickname you wish to use");
-      if(nickname == null){
+      if(nickname == null || nickname == ""){
         alert("Nickname cannot be blank");
       }
       else{
+        socket.emit('join request');
         socket.emit('user join', nickname);
+
       }
 
 
@@ -77,9 +79,20 @@
       socket.on('server message', function(msg){
         $('#messages').append($('<li>').text(msg).css('color', '#848484'));
       });
+      socket.on('join request', function(connectedUsers){
+        updateClient(connectedUsers);
+        return;
+      });
       socket.on('user join', function(user){
         $('#userList').append($('<li>').text(user));
       });
+
+      function updateClient(userList){
+        for (var i = 0; i < userList.length; i++) {
+           $('#userList').append($('<li>').text(userList[i]));
+         }; 
+      }
+
     </script>
   </body>
 </html>

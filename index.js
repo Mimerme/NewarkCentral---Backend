@@ -8,6 +8,7 @@ var connectedUsers = [];
 //server message - message broadcasted to all users from the server
 //user join - when the user specifies a nickname and joins the chat
 //chat message - string broadcasted to all connected users
+//join request - returns the values set when user was not here (ex. users, chat log, etc)
 
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
@@ -22,10 +23,14 @@ io.on('connection', function(socket){
     console.log('message: ' + msg);
     io.emit('chat message', msg, nick, getTimestamp());
   });
+  socket.on('join request', function(){
+      console.log('returning connected users');
+      socket.emit('join request', connectedUsers);
+  });
   socket.on('user join', function(nick){
-  	connectedUsers.push(nick.toString());
-  	  io.emit('server message', 'User ' + nick + ' has joined');
-  	  io.emit('user join', nick);
+    connectedUsers.push(nick.toString());
+      io.emit('server message', 'User ' + nick + ' has joined');
+      io.emit('user join', nick);
   });
 });
 
