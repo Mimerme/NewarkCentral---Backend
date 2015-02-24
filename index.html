@@ -60,7 +60,6 @@
       else{
         socket.emit('join request');
         socket.emit('user join', nickname);
-
       }
 
 
@@ -79,8 +78,9 @@
       socket.on('server message', function(msg){
         $('#messages').append($('<li>').text(msg).css('color', '#848484'));
       });
-      socket.on('join request', function(connectedUsers){
+      socket.on('join request', function(connectedUsers, chatL, chatT, chatN){
         updateClient(connectedUsers);
+        updateChat(chatL, chatT, chatN);
         return;
       });
       socket.on('user join', function(user){
@@ -90,7 +90,18 @@
       function updateClient(userList){
         for (var i = 0; i < userList.length; i++) {
            $('#userList').append($('<li>').text(userList[i]));
-         }; 
+         }
+      }
+
+      function updateChat(chatLog, chatTime, chatNicks){
+
+        for (var i = 0; i < chatLog.length; i++) {
+           $('#messages').append($('<li>').text(chatLog[i]).append($('<div>').css({
+           'text-align': 'right',
+           'opacity': 0.4
+            }).text('Sent by '+ chatNicks[i]  + ' @ ' + chatTime[i])));
+
+         } 
       }
 
     </script>
