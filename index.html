@@ -52,6 +52,7 @@
     </form>
     <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
     <script>
+      var socketID;
       var socket = io();
       var nickname = prompt("Enter the nickname you wish to use");
       if(nickname == null || nickname == ""){
@@ -59,7 +60,6 @@
       }
       else{
         socket.emit('join request');
-        socket.emit('user join', nickname);
       }
 
 
@@ -69,6 +69,11 @@
         $('#m').val('');
         return false;
       });
+
+      socket.on('user leave', function(nick){
+        $('#userList').append($('<li>').text(user));
+      });
+
       socket.on('chat message', function(msg, nick, timestamp){
         $('#messages').append($('<li>').text(msg).append($('<div>').css({
           'text-align': 'right',
@@ -78,9 +83,11 @@
       socket.on('server message', function(msg){
         $('#messages').append($('<li>').text(msg).css('color', '#848484'));
       });
-      socket.on('join request', function(connectedUsers, chatL, chatT, chatN){
+      socket.on('join request', function(connectedUsers, chatL, chatT, chatN, socketID){
         updateClient(connectedUsers);
         updateChat(chatL, chatT, chatN);
+        socket.emit('user join', nickname, socketID);
+        console.log(nickname + ' joined with socketID ' + socketID);
         return;
       });
       socket.on('user join', function(user){

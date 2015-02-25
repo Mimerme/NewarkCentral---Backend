@@ -2,7 +2,7 @@ var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
-var connectedUsers = [];
+var connectedUsers = {};
 var chatLog = [];
 var chatLogTimeStamps = [];
 var chatNicks = [];
@@ -20,7 +20,7 @@ app.get('/', function(req, res){
 io.on('connection', function(socket){
   console.log('A user connected from ip: ' + socket.handshake.address);
   socket.on('disconnect', function(){
-    console.log('a user disconnected');
+    console.log(socket.id + ' : ' + connectedUsers[socket.id] + ' disconnected');
   });
   socket.on('chat message', function(msg, nick){
     var t = getTimestamp();
@@ -28,14 +28,17 @@ io.on('connection', function(socket){
     addMessage(msg, t, nick);
     io.emit('chat message', msg, nick, t);
   });
+  //Client asks for basic information on the room
   socket.on('join request', function(){
       console.log('returning connected users');
-      socket.emit('join request', connectedUsers, chatLog, chatLogTimeStamps, chatNicks);
+      socket.emit('join request', connectedUsers, chatLog, chatLogTimeStamps, chatNicks, socket.id);
   });
-  socket.on('user join', function(nick){
-    connectedUsers.push(nick);
+
+  //When the user specifies their nickname
+  socket.on('user join', function(nick, socketID){
       io.emit('server message', 'User ' + nick + ' has joined');
       io.emit('user join', nick);
+      connectedUsers[socketID] = nick;
   });
 });
 
