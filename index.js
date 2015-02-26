@@ -18,7 +18,6 @@ app.get('/', function(req, res){
 });
 
 io.on('connection', function(socket){
-  console.log('A user connected from ip: ' + socket.handshake.address);
   socket.on('disconnect', function(){
     console.log(socket.id + ' : ' + connectedUsers[socket.id] + ' disconnected');
     io.emit('server message', 'User ' + connectedUsers[socket.id] + ' has left');
@@ -33,7 +32,6 @@ io.on('connection', function(socket){
   });
   //Client asks for basic information on the room
   socket.on('join request', function(){
-      console.log('returning connected users');
       socket.emit('join request', connectedUsers, chatLog, chatLogTimeStamps, chatNicks, socket.id);
   });
 
@@ -41,7 +39,7 @@ io.on('connection', function(socket){
   socket.on('user join', function(nick, socketID){
       io.emit('server message', 'User ' + nick + ' has joined');
       io.emit('user join', nick);
-      console.log("user " + nick + " with socket ID " + socketID + " has joined");
+      console.log("user '" + nick + "' with socket ID '" + socketID + "' has joined from ip: '" + socket.handshake.address + "' ");
       connectedUsers[socketID] = nick;
   });
 });
