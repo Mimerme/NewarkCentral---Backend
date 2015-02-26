@@ -21,6 +21,9 @@ io.on('connection', function(socket){
   console.log('A user connected from ip: ' + socket.handshake.address);
   socket.on('disconnect', function(){
     console.log(socket.id + ' : ' + connectedUsers[socket.id] + ' disconnected');
+    io.emit('server message', 'User ' + connectedUsers[socket.id] + ' has left');
+    delete connectedUsers[socket.id];
+    io.emit('user leave', connectedUsers);
   });
   socket.on('chat message', function(msg, nick){
     var t = getTimestamp();
@@ -38,6 +41,7 @@ io.on('connection', function(socket){
   socket.on('user join', function(nick, socketID){
       io.emit('server message', 'User ' + nick + ' has joined');
       io.emit('user join', nick);
+      console.log("user " + nick + " with socket ID " + socketID + " has joined");
       connectedUsers[socketID] = nick;
   });
 });

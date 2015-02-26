@@ -39,10 +39,11 @@
   </head>
   <body>
 
-<div class="col-sm-1 col-md-1 sidebar box-content right" id='userList'>
-          <ul class="nav nav-sidebar">
-            <p1><b>Users in this chatroom</b></h1>
-          </ul></div>    
+<div class="col-sm-1 col-md-1 sidebar box-content right">
+        <p1><b>Users in this chatroom</b></p1>
+          <ul class="nav nav-sidebar"  id='userList'>
+          </ul>
+        </div>    
 <div class="col-sm-9 col-md-9 sidebar container-content right">
   <ul id="messages"></ul>
     </div>
@@ -70,8 +71,9 @@
         return false;
       });
 
-      socket.on('user leave', function(nick){
-        $('#userList').append($('<li>').text(user));
+      socket.on('user leave', function(userLists){
+        $('#userList').empty();
+        updateClient(userLists);
       });
 
       socket.on('chat message', function(msg, nick, timestamp){
@@ -80,6 +82,7 @@
            'opacity': 0.4
       }).text('Sent by '+ nick  + ' @ ' + timestamp)));
       });
+
       socket.on('server message', function(msg){
         $('#messages').append($('<li>').text(msg).css('color', '#848484'));
       });
@@ -95,13 +98,12 @@
       });
 
       function updateClient(userList){
-        for (var i = 0; i < userList.length; i++) {
-           $('#userList').append($('<li>').text(userList[i]));
+        for (var user in userList) {
+           $('#userList').append($('<li>').text(userList[user]));
          }
       }
 
       function updateChat(chatLog, chatTime, chatNicks){
-
         for (var i = 0; i < chatLog.length; i++) {
            $('#messages').append($('<li>').text(chatLog[i]).append($('<div>').css({
            'text-align': 'right',
@@ -110,7 +112,6 @@
 
          } 
       }
-
     </script>
   </body>
 </html>
