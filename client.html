@@ -52,22 +52,20 @@
     </form>
     <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
     <script>
+      var roomList;
+      var room = prompt("Enter the room you wish to join");
+      var nick = prompt("Enter the nickname you wish to use");
       var socketID;
+
       var socket = io();
 
-      var roomname = prompt("Enter the room you wish to join");
-      if(roomname == null || roomname == ""){
-        alert("Roomname cannot be blank");
-      }
+      socket.on('UserConnectionFailed', function(reason){
+        if(reason == "roomNonExistant"){
+          alert("The room you are trying to join does not exist");
+        }
+      });
 
-      var nickname = prompt("Enter the nickname you wish to use");
-      if(nickname == null || nickname == ""){
-        alert("Nickname cannot be blank");
-      }
-      else{
-        socket.emit('join request', roomname);
-      }
-
+      socket.emit('UserConnectionAttempt', room, nick);
 
       $('form').submit(function(){
         socket.emit('chat message', $('#m').val(), nickname, roomname);

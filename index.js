@@ -6,6 +6,7 @@ var connectedUsers = {};
 var chatLog = [];
 var chatLogTimeStamps = [];
 var chatNicks = [];
+var PORT = 6900;
 
 //Socket events
 //server message - message broadcasted to all users from the server
@@ -28,24 +29,25 @@ io.on('connection', function(socket){
     var t = getTimestamp();
     console.log(nick + ' : ' + msg + ' @ ' + t);
     addMessage(msg, t, nick);
-    io.emit('chat message', msg, nick, t);
+    io.to(roomname).emit('chat message', msg, nick, t);
   });
   //Client asks for basic information on the room
-  socket.on('join request', function(){
+  socket.on('join request', function(roomname){
+    socket.join(roomname);
       socket.emit('join request', connectedUsers, chatLog, chatLogTimeStamps, chatNicks, socket.id);
   });
 
   //When the user specifies their nickname
-  socket.on('user join', function(nick, socketID){
-      io.emit('server message', 'User ' + nick + ' has joined');
-      io.emit('user join', nick);
+  socket.on('user join', function(nick, socketID, roomname){
+      io.to(roomname).emit('server message', 'User ' + nick + ' has joined');
+      io.to(roomname).emit('user join', nick);
       console.log("user '" + nick + "' with socket ID '" + socketID + "' has joined from ip: '" + socket.handshake.address + "' ");
       connectedUsers[socketID] = nick;
   });
 });
 
-http.listen(3000, function(){
-  console.log('listening on *:3000');
+http.listen(PORT, function(){
+  console.log('listening on *:' + PORT);
 });
 
 function getTimestamp(){
