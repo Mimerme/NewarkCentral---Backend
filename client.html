@@ -62,64 +62,49 @@
       socket.on('UserConnectionFailed', function(reason){
         if(reason == "roomNonExistant"){
           alert("The room you are trying to join does not exist");
+          room = null;
+          nick = null;
         }
       });
 
       socket.emit('UserConnectionAttempt', room, nick);
 
       $('form').submit(function(){
-        socket.emit('chat message', $('#m').val(), nickname, roomname);
+        socket.emit('OnChatMessage', room, $('#m').val(), nick);
         $('#m').val('');
         return false;
       });
 
-      socket.on('user leave', function(userLists){
-        $('#userList').empty();
-        updateClient(userLists);
+      socket.on('chatMessage', function(msg, nick, timestamp){
+        displayMessage(msg, nick, timestamp);
       });
 
-      socket.on('chat message', function(msg, nick, timestamp){
+      socket.on('serverMessage', function(msg){
+        $('#messages').append($('<li>').text(msg).css('color', '#848484'));
+      });
+
+      socket.on('init', function(chatLog, connectedUsers){
+        for (var message in chatLog) {
+          var split = chatLog[message].split(',');
+          displayMessage(split[0], split[1], split[2]);
+        }
+        for(var user in connectedUsers){
+            console.log(connectedUsers);
+            addUser(connectedUsers[user]);
+          }
+      });
+
+      function displayMessage(msg, nick, timestamp){
         $('#messages').append($('<li>').text(msg).append($('<div>').css({
           'text-align': 'right',
            'opacity': 0.4
-      }).text('Sent by '+ nick  + ' @ ' + timestamp)));
-      });
-
-      socket.on('server message', function(msg){
-        $('#messages').append($('<li>').text(msg).css('color', '#848484'));
-      });
-      socket.on('join request', function(connectedUsers, chatL, chatT, chatN, socketID){
-        updateClient(connectedUsers);
-        updateChat(chatL, chatT, chatN);
-        socket.emit('user join', nickname, socketID, roomname);
-        console.log(nickname + ' joined with socketID ' + socketID);
-        return;
-      });
-      socket.on('user join', function(user){
-        $('#userList').append($('<li>').text(user));
-      });
-
-      function updateClient(userList){
-        for (var user in userList) {
-           $('#userList').append($('<li>').text(userList[user]));
-         }
+        }).text('Sent by '+ nick  + ' @ ' + timestamp)));
       }
 
-      function updateChat(chatLog, chatTime, chatNicks){
-        for (var i = 0; i < chatLog.length; i++) {
-           $('#messages').append($('<li>').text(chatLog[i]).append($('<div>').css({
-           'text-align': 'right',
-           'opacity': 0.4
-            }).text('Sent by '+ chatNicks[i]  + ' @ ' + chatTime[i])));
-
-         } 
+      function addUser(nickname){
+        $('#userList').append($('<li>').text(nickname));
       }
+      
     </script>
   </body>
-<div>
-  <img src="http://i.imgur.com/f3wH9Ja.png" width="250" height="170">
-  <div id="roomTopic"></div>
-  <button class="btn btn-lg btn-primary">Leave Chat Room</button>
-  <button class="btn btn-lg btn-primary">Credits</button>
-</div>
 </html>
