@@ -2,8 +2,11 @@ var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
+//List of rooms
 var roomList = [];
+//key - room : pair - chatlog of room in array form
 var roomChatLogs = {};
+//Key - toom : psit - array of user list for room
 var roomConnectedUsers = {};
 
   app.get('/', function(req, res){
@@ -15,16 +18,23 @@ var roomConnectedUsers = {};
 
   io.on('connection', function(socket){
     socket.on('UserConnectionAttempt', function(room, nickname){
+      //Meaninless debug
       console.log('User ' + nickname + ' is attempting to connect to ' + 
         'room ' + room + ' from ip ' + socket.handshake.address);
-      if(roomList.indexOf(room) <= -1)
+      if(roomList.indexOf(room) <= -1){
         socket.emit('UserConnectionFailed', "roomNonExistant");
+        //TODO handle reponse properly
+        return;
+      }
 
       socket.join(room);
+      //Tell the room who has walked in ;)
       sendServerMessage(nickname + " has joined room " + room, room);
       io.to(room).emit('userJoin', nickname);
       socket.emit('init', roomChatLogs[room], roomConnectedUsers[room]);
+      //get userList array and push
       roomConnectedUsers[room].push(nickname);
+      
       socket.on('disconnect', function(){
         var userList = roomConnectedUsers[room];
         delete userList[userList.indexOf(nickname)];

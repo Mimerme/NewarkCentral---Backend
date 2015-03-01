@@ -61,9 +61,11 @@
 
       socket.on('UserConnectionFailed', function(reason){
         if(reason == "roomNonExistant"){
+          //If room is nonexistant then retry the connection to another room
           alert("The room you are trying to join does not exist");
           room = null;
           nick = null;
+          //TODO : Redirect
         }
       });
 
@@ -79,16 +81,22 @@
         displayMessage(msg, nick, timestamp);
       });
 
+      //Server messages are a light-grey
       socket.on('serverMessage', function(msg){
         $('#messages').append($('<li>').text(msg).css('color', '#848484'));
       });
 
       socket.on('init', function(chatLog, connectedUsers){
+        //Loop through chat log messages
         for (var message in chatLog) {
+          //chat messages, nicknames, and timestamps are split by commas
           var split = chatLog[message].split(',');
+          //re assemblr the message
           displayMessage(split[0], split[1], split[2]);
         }
+        //Loop through connected room  users
         for(var user in connectedUsers){
+          //TODO : Hacky
             if(connectedUsers[user] == null){
               continue;
             }
@@ -96,13 +104,18 @@
           }
       });
 
-      socket.on('userJoin', function(nick){
+      socket.on('userJoin', function(nick){(eg. time, room list, version) 
         addUser(nick);
       });
 
       socket.on('userLeave', function(updatedUserList){
+        //TODO : Fix hacky method of handling user leaves
+        //Reset the user list
           $('#userList').empty();
+          //Re-add the users
           for(var user in updatedUserList){
+            //Ignore all null values 
+            //TODO : server should handle null values
             if(updatedUserList[user] == null){
               continue;
             }
@@ -110,10 +123,7 @@
           }
       });
 
-      socket.on('disconnect', function(){
-        socket.emit('OnChatMessage', room, 'im leaving', nick);
-      });
-
+      //Only displays chat messages
       function displayMessage(msg, nick, timestamp){
         $('#messages').append($('<li>').text(msg).append($('<div>').css({
           'text-align': 'right',
