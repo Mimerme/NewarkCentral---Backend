@@ -89,8 +89,29 @@
           displayMessage(split[0], split[1], split[2]);
         }
         for(var user in connectedUsers){
+            if(connectedUsers[user] == null){
+              continue;
+            }
             addUser(connectedUsers[user]);
           }
+      });
+
+      socket.on('userJoin', function(nick){
+        addUser(nick);
+      });
+
+      socket.on('userLeave', function(updatedUserList){
+          $('#userList').empty();
+          for(var user in updatedUserList){
+            if(updatedUserList[user] == null){
+              continue;
+            }
+            addUser(updatedUserList[user]);
+          }
+      });
+
+      socket.on('disconnect', function(){
+        socket.emit('OnChatMessage', room, 'im leaving', nick);
       });
 
       function displayMessage(msg, nick, timestamp){

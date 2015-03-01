@@ -22,9 +22,15 @@ var roomConnectedUsers = {};
 
       socket.join(room);
       sendServerMessage(nickname + " has joined room " + room, room);
-      console.log(roomChatLogs);
-      roomConnectedUsers[room].push(nickname);
+      io.to(room).emit('userJoin', nickname);
       socket.emit('init', roomChatLogs[room], roomConnectedUsers[room]);
+      roomConnectedUsers[room].push(nickname);
+      socket.on('disconnect', function(){
+        var userList = roomConnectedUsers[room];
+        delete userList[userList.indexOf(nickname)];
+        roomConnectedUsers[room] = userList;
+        io.to(room).emit('userLeave', userList);
+      });
     });
     socket.on('OnChatMessage', function(room, message, nickname){
       sendChatMessage(message, room, nickname);
