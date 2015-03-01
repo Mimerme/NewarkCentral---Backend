@@ -2,8 +2,8 @@ var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
-//List of rooms
-var roomList = [];
+//List of rooms and their descriptions
+var roomList = {};
 //key - room : pair - chatlog of room in array form
 var roomChatLogs = {};
 //Key - toom : psit - array of user list for room
@@ -14,7 +14,7 @@ var roomConnectedUsers = {};
   });
 
     //TODO remove createroom default
-    createRoom('developer');
+    createRoom('developer', 'testing room for tests of testacular tests');
 
   io.on('connection', function(socket){
     socket.on('UserConnectionAttempt', function(room, nickname){
@@ -34,7 +34,7 @@ var roomConnectedUsers = {};
       socket.emit('init', roomChatLogs[room], roomConnectedUsers[room]);
       //get userList array and push
       roomConnectedUsers[room].push(nickname);
-      
+
       socket.on('disconnect', function(){
         var userList = roomConnectedUsers[room];
         delete userList[userList.indexOf(nickname)];
@@ -52,13 +52,13 @@ var roomConnectedUsers = {};
     console.log('listening on *:3000');
   });
 
-  function createRoom(room){
+  function createRoom(room, description){
     if(roomList.indexOf(room) >= 0)
       return;
     console.log('Creating new room ' + room);
     roomChatLogs[room] = [];
     roomConnectedUsers[room] = [];
-    roomList.push(room);
+    roomList[room] = description;
   }
 
   function sendServerMessage(message, room){
