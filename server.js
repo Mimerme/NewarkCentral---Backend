@@ -21,7 +21,7 @@ var roomConnectedUsers = {};
       //Meaninless debug
       console.log('User ' + nickname + ' is attempting to connect to ' + 
         'room ' + room + ' from ip ' + socket.handshake.address);
-      if(roomList.indexOf(room) <= -1){
+      if(hastableContains(roomList, room)){
         socket.emit('UserConnectionFailed', "roomNonExistant");
         //TODO handle reponse properly
         return;
@@ -39,7 +39,7 @@ var roomConnectedUsers = {};
         var userList = roomConnectedUsers[room];
         delete userList[userList.indexOf(nickname)];
         roomConnectedUsers[room] = userList;
-        io.to(room).emit('userLeave', userList);
+        io.to(room).emit('userLeave', userList, nickname);
       });
     });
     socket.on('OnChatMessage', function(room, message, nickname){
@@ -53,8 +53,10 @@ var roomConnectedUsers = {};
   });
 
   function createRoom(room, description){
-    if(roomList.indexOf(room) >= 0)
+
+    if(hastableContains(roomList, room))
       return;
+
     console.log('Creating new room ' + room);
     roomChatLogs[room] = [];
     roomConnectedUsers[room] = [];
@@ -74,4 +76,13 @@ var roomConnectedUsers = {};
 
   function getTimestamp(){
     return new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '') 
+  }
+
+  function hastableContains(hastable, value){
+    for(var key in hastable)
+      {
+        if(hastable[key]==value)
+             return true;
+      }
+      return false;
   }

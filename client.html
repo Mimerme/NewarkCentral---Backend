@@ -104,11 +104,11 @@
           }
       });
 
-      socket.on('userJoin', function(nick){(eg. time, room list, version) 
+      socket.on('userJoin', function(nick){
         addUser(nick);
       });
 
-      socket.on('userLeave', function(updatedUserList){
+      socket.on('userLeave', function(updatedUserList, nickname){
         //TODO : Fix hacky method of handling user leaves
         //Reset the user list
           $('#userList').empty();
@@ -121,6 +121,7 @@
             }
             addUser(updatedUserList[user]);
           }
+          $('#messages').append($('<li>').text(nickname + " has left the room").css('color', '#848484'));
       });
 
       //Only displays chat messages
