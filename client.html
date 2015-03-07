@@ -53,9 +53,19 @@
     <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
     <script>
       var roomList;
-      var room = prompt("Enter the room you wish to join");
-      var nick = prompt("Enter the nickname you wish to use");
+      var room;
+      var nick;
       var socketID;
+
+      room = removeQuotes(getUrlParameter('room'));
+      nick = removeQuotes(getUrlParameter('nickname'));
+
+      if(room == null){
+        room = prompt("Enter the room you wish to join");
+      }
+      if(nick == null){
+        nick = prompt("Enter the nickname you wish to use");
+      }
 
       var socket = io();
 
@@ -124,6 +134,20 @@
           $('#messages').append($('<li>').text(nickname + " has left the room").css('color', '#848484'));
       });
 
+      function getUrlParameter(sParam)
+      {
+          var sPageURL = window.location.search.substring(1);
+          var sURLVariables = sPageURL.split('&');
+          for (var i = 0; i < sURLVariables.length; i++) 
+          {
+              var sParameterName = sURLVariables[i].split('=');
+              if (sParameterName[0] == sParam) 
+              {
+                  return sParameterName[1];
+              }
+          }
+      }          
+
       //Only displays chat messages
       function displayMessage(msg, nick, timestamp){
         $('#messages').append($('<li>').text(msg).append($('<div>').css({
@@ -134,6 +158,13 @@
 
       function addUser(nickname){
         $('#userList').append($('<li>').text(nickname));
+      }
+
+      function removeQuotes(string){
+        if(string == null)
+        return;
+
+        return string.replace(new RegExp('%22', 'g'), '');
       }
       
     </script>

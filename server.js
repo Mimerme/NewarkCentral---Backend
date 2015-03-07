@@ -1,6 +1,7 @@
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+var url = require('url');
 
 //List of rooms and their descriptions
 var roomList = {};
@@ -10,18 +11,23 @@ var roomChatLogs = {};
 var roomConnectedUsers = {};
 
   app.get('/', function(req, res){
+    console.log(req.url);
     res.sendFile(__dirname + '/client.html');
+        if(req.query.createRoom != null){
+          createRoom(removeQuotes(req.query.createRoom),
+            removeQuotes(req.query.description));
+        }
   });
-
     //TODO remove createroom default
     createRoom('developer', 'testing room for tests of testacular tests');
 
+ 
   io.on('connection', function(socket){
     socket.on('UserConnectionAttempt', function(room, nickname){
       //Meaninless debug
       console.log('User ' + nickname + ' is attempting to connect to ' + 
         'room ' + room + ' from ip ' + socket.handshake.address);
-      if(hastableContains(roomList, room)){
+      if(!hastableContains(roomList, room)){
         socket.emit('UserConnectionFailed', "roomNonExistant");
         //TODO handle reponse properly
         return;
@@ -79,10 +85,12 @@ var roomConnectedUsers = {};
   }
 
   function hastableContains(hastable, value){
-    for(var key in hastable)
-      {
-        if(hastable[key]==value)
-             return true;
-      }
-      return false;
+    return value in hastable;
+  }
+
+  function removeQuotes(string){
+    if(string == null)
+      return;
+
+   return string.replace(new RegExp('"', 'g'), '');
   }

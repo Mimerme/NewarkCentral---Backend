@@ -11,17 +11,27 @@
     <body>
     <center>
       <div class="bs-example">
+        
     <form>
         <div class="form-group">
             <label for="inputEmail">Room Name</label>
-            <input class="form-control" id="inputRoomName" placeholder="Room name">
+            <input id="inputRoomName" placeholder="Room name">
         </div>
         <div class="form-group">
             <label for="inputDescription">Description</label>
-            <input class="form-control" id="inputPassword" placeholder="Enter a short description">
+            <input id="inputDescription" placeholder="Enter a short description">
         </div>
-        <button type="submit" class="btn btn-primary">Create Room</button>
     </form>
+        <button id="createRoom" class="btn btn-primary">Create Room</button>
+
+    <script>
+    var URL = "localhost:3000/?";
+        $("#createRoom").click(function(){
+            console.log(URL + 'createRoom="' + $("#inputRoomName").val() + '"&description="' + $("#inputDescription").val() + '"');
+           window.location.replace("http://" + URL + 'createRoom="' + $("#inputRoomName").val() + '&description="' + $("#inputDescription").val() + '"');
+        });
+    </script>
+
 </div>
     </center>>
   </body>
