@@ -96,7 +96,7 @@
         $('#messages').append($('<li>').text(msg).css('color', '#848484'));
       });
 
-      socket.on('init', function(chatLog, connectedUsers){
+      socket.on('init', function(chatLog, connectedUsers, desciption){
         //Loop through chat log messages
         for (var message in chatLog) {
           //chat messages, nicknames, and timestamps are split by commas
@@ -112,6 +112,9 @@
             }
             addUser(connectedUsers[user]);
           }
+
+          $("#description").append($('<p3>').text(desciption));
+
       });
 
       socket.on('userJoin', function(nick){
@@ -169,4 +172,7 @@
       
     </script>
   </body>
+  <div id="description">
+  <p3><b>Description</b></p3><br>
+  </div>
 </html>

@@ -37,7 +37,7 @@ var roomConnectedUsers = {};
       //Tell the room who has walked in ;)
       sendServerMessage(nickname + " has joined room " + room, room);
       io.to(room).emit('userJoin', nickname);
-      socket.emit('init', roomChatLogs[room], roomConnectedUsers[room]);
+      socket.emit('init', roomChatLogs[room], roomConnectedUsers[room], roomList[room]);
       //get userList array and push
       roomConnectedUsers[room].push(nickname);
 
