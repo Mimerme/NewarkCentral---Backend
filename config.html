@@ -27,7 +27,7 @@
     <script>
     var URL = "localhost:3000/?";
         $("#createRoom").click(function(){
-            console.log(URL + 'createRoom="' + $("#inputRoomName").val() + '"&description="' + $("#inputDescription").val() + '"');
+            console.log(URL + 'createRoom="' + $("#inputRoomName").val() + '"' +'&description="' + $("#inputDescription").val() + '"');
            window.location.replace("http://" + URL + 'createRoom="' + $("#inputRoomName").val() + '&description="' + $("#inputDescription").val() + '"');
         });
     </script>
