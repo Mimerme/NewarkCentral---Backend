@@ -52,6 +52,8 @@
     </form>
     <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
     <script>
+      var REDIRECT_URL = "https://www.google.com/";
+
       var roomList;
       var room;
       var nick;
@@ -77,6 +79,11 @@
           nick = null;
           //TODO : Redirect
         }
+      });
+
+      socket.on('OnRoomExpire', function(){
+        alert('The room you are currently in has reached its expiration, the client will now close');
+        window.location.replace(REDIRECT_URL);
       });
 
       socket.emit('UserConnectionAttempt', room, nick);

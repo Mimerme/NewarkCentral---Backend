@@ -5,10 +5,15 @@ var url = require('url');
 
 //List of rooms and their descriptions
 var roomList = {};
+
 //key - room : pair - chatlog of room in array form
 var roomChatLogs = {};
-//Key - toom : psit - array of user list for room
+
+//Key - room : pair - array of user list for room
 var roomConnectedUsers = {};
+
+//Key - room :: pair - how many hours are remaining for the room
+var roomLives = {};
 
   app.get('/', function(req, res){
     console.log(req.url);
@@ -19,8 +24,8 @@ var roomConnectedUsers = {};
         }
   });
     //TODO remove createroom default
-    createRoom('developer', 'testing room for tests of testacular tests');
-
+    createRoom('developer', 'testing room for tests of testacular tests', 2);
+    expirationManager();
  
   io.on('connection', function(socket){
     socket.on('UserConnectionAttempt', function(room, nickname){
@@ -43,7 +48,7 @@ var roomConnectedUsers = {};
 
       socket.on('disconnect', function(){
         var userList = roomConnectedUsers[room];
-        delete userList[userList.indexOf(nickname)];
+        userList = removeElement(nickname, userList);
         roomConnectedUsers[room] = userList;
         io.to(room).emit('userLeave', userList, nickname);
       });
@@ -58,7 +63,7 @@ var roomConnectedUsers = {};
     console.log('listening on *:3000');
   });
 
-  function createRoom(room, description){
+  function createRoom(room, description, expiration){
 
     if(hastableContains(roomList, room))
       return;
@@ -67,6 +72,34 @@ var roomConnectedUsers = {};
     roomChatLogs[room] = [];
     roomConnectedUsers[room] = [];
     roomList[room] = description;
+    roomLives[room] = expiration;
+  }
+
+  function removeElement(target, array){
+    var i = array.indexOf(target);
+    if(i != -1) {
+      array.splice(i, 1);
+    }
+    return array;
+  }
+
+  function expirationManager(){
+    setInterval(function(){
+      console.log('Running the expiration cycle');
+      for (var key in roomLives) {
+        roomLives[key] -= 1;
+        if(roomLives[key] <= 0){
+          console.log("Room " + key + " has expired");
+          io.emit()
+          delete roomLives[key];
+          delete roomChatLogs[key];
+          delete roomList[key];
+          delete roomConnectedUsers[key];
+          io.to(key).emit('OnRoomExpire');
+        }
+      };
+      //Multiply by 1000 to extend 1 min to 1 hour
+    }, 60 * 60);  
   }
 
   function sendServerMessage(message, room){
