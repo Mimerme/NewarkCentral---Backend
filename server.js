@@ -20,9 +20,11 @@ var roomLives = {};
     res.sendFile(__dirname + '/client.html');
         if(req.query.createRoom != null){
           createRoom(removeQuotes(req.query.createRoom),
-            removeQuotes(req.query.description));
+            removeQuotes(req.query.description),
+            removeQuotes(req.query.lifetime));
         }
   });
+  
     //TODO remove createroom default
     createRoom('developer', 'testing room for tests of testacular tests', 2);
     expirationManager();
@@ -64,6 +66,8 @@ var roomLives = {};
   });
 
   function createRoom(room, description, expiration){
+    if(expiration > 48)
+      expiration = 48;
 
     if(hastableContains(roomList, room))
       return;

@@ -21,6 +21,59 @@
             <label for="inputDescription">Description</label>
             <input id="inputDescription" placeholder="Enter a short description">
         </div>
+
+        <div class="form-group">
+            <label for="roomDuration">Room Duration</label>
+            <select id="roomDuration">
+            <option value="3">3 Hours</option>
+            <option value="4">4 Hours</option>
+            <option value="5">5 Hours</option>
+            <option value="6">6 Hours</option>
+            <option value="7">7 Hours</option>
+            <option value="8">8 Hours</option>
+            <option value="9">9 Hours</option>
+            <option value="10">10 Hours</option>
+            <option value="11">11 Hours</option>
+            <option value="12">12 Hours</option>
+            <option value="13">13 Hours</option>
+            <option value="14">14 Hours</option>
+            <option value="15">15 Hours</option>
+            <option value="16">16 Hours</option>
+            <option value="17">17 Hours</option>
+            <option value="18">18 Hours</option>
+            <option value="19">19 Hours</option>
+            <option value="20">20 Hours</option>
+            <option value="21">21 Hours</option>
+            <option value="22">22 Hours</option>
+            <option value="23">23 Hours</option>
+            <option value="24">24 Hours</option>
+            <option value="25">25 Hours</option>
+            <option value="26">26 Hours</option>
+            <option value="27">27 Hours</option>
+            <option value="28">28 Hours</option>
+            <option value="29">29 Hours</option>
+            <option value="30">30 Hours</option>
+            <option value="31">31 Hours</option>
+            <option value="32">32 Hours</option>
+            <option value="33">33 Hours</option>
+            <option value="34">34 Hours</option>
+            <option value="35">35 Hours</option>
+            <option value="36">36 Hours</option>
+            <option value="37">37 Hours</option>
+            <option value="38">38 Hours</option>
+            <option value="39">39 Hours</option>
+            <option value="40">40 Hours</option>
+            <option value="41">41 Hours</option>
+            <option value="42">42 Hours</option>
+            <option value="43">43 Hours</option>
+            <option value="44">44 Hours</option>
+            <option value="45">45 Hours</option>
+            <option value="46">46 Hours</option>
+            <option value="47">47 Hours</option>
+            <option value="48">48 Hours</option>
+            </select>
+        </div>
+
     </form>
         <button id="createRoom" class="btn btn-primary">Create Room</button>
 
@@ -28,7 +81,7 @@
     var URL = "localhost:3000/?";
         $("#createRoom").click(function(){
             console.log(URL + 'createRoom="' + $("#inputRoomName").val() + '"' +'&description="' + $("#inputDescription").val() + '"');
-           window.location.replace("http://" + URL + 'createRoom="' + $("#inputRoomName").val() + '&description="' + $("#inputDescription").val() + '"');
+           window.location.replace("http://" + URL + 'createRoom="' + $("#inputRoomName").val() + '&description="' + $("#inputDescription").val() + '"&lifetime=' + '"' + $("#roomDuration option:selected").val() + '"');
         });
     </script>
 
