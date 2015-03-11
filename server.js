@@ -102,7 +102,7 @@ var roomLives = {};
   });
 //process.env.PORT is used by heroku
   http.listen(process.env.PORT || 5000, function(){
-    console.log('listening on *:5000');
+    console.log('listening on port 5000');
   });
 
   function createRoom(room, description, expiration){
