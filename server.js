@@ -100,8 +100,8 @@ var roomLives = {};
     });
 
   });
-  //Heroku supports port 5000 so thats why we use it
-  http.listen(5000, function(){
+//process.env.PORT is used by heroku
+  http.listen(process.env.PORT || 5000), function(){
     console.log('listening on *:5000');
   });
 
