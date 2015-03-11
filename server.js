@@ -18,7 +18,12 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.*/
+SOFTWARE.
+
+Dear reader who either skipped the entire reading of the license or actually read it
+to those whom it may concern server.js is the most up-to-date and complete early and cleaner rewrite compared
+to index.js. Client.html's script was also a clean re-write early one
+that is all*/
 
 var app = require('express')();
 var http = require('http').Server(app);
@@ -38,18 +43,28 @@ var roomConnectedUsers = {};
 var roomLives = {};
 
   app.get('/', function(req, res){
-    console.log(req.url);
-    res.sendFile(__dirname + '/client.html');
+        if(req.query.renewRoom != null){
+            roomLives[removeQuotes(req.query.renewRoom)] = 24;
+            console.log("Renewing room "  + removeQuotes(req.query.renewRoom));
+            res.sendFile(__dirname + '/renew.html');
+            return;
+        }
+
         if(req.query.createRoom != null){
           createRoom(removeQuotes(req.query.createRoom),
             removeQuotes(req.query.description),
             removeQuotes(req.query.lifetime));
+            //Redirect the user to the room they just created
+            res.statusCode = 302;
+            res.setHeader("Location", '/?room=' + req.query.createRoom + '"');
+            res.end();
         }
+        res.sendFile(__dirname + '/client.html');
   });
 
     //TODO remove createroom default
     createRoom('developer', 'testing room for tests of testacular tests', 2);
-    expirationManager();
+    expirationManager(); 
  
   io.on('connection', function(socket){
     socket.on('UserConnectionAttempt', function(room, nickname){
@@ -58,7 +73,6 @@ var roomLives = {};
         'room ' + room + ' from ip ' + socket.handshake.address);
       if(!hastableContains(roomList, room)){
         socket.emit('UserConnectionFailed', "roomNonExistant");
-        //TODO handle reponse properly
         return;
       }
 
@@ -128,8 +142,7 @@ var roomLives = {};
           io.to(key).emit('OnRoomExpire');
         }
       };
-      //Multiply by 1000 to extend 1 min to 1 hour
-    }, 60 * 60);  
+    }, 600000);  
   }
 
   function sendServerMessage(message, room){

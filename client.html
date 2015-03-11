@@ -20,6 +20,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  -->
+
 <!doctype html>
 <html>
   <head>
@@ -75,6 +76,7 @@ SOFTWARE.
     <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
     <script>
       var REDIRECT_URL = "https://www.google.com/";
+      var URL = "localhost:3000"
 
       var roomList;
       var room;
@@ -198,10 +200,16 @@ SOFTWARE.
 
         return string.replace(new RegExp('%22', 'g'), '');
       }
+
+      function renew(){
+        window.open("http://" + URL + '/?renewRoom="' + room + '"');
+        //window.open("https://google.com");
+      }
       
     </script>
   </body>
   <div id="description">
   <p3><b>Description</b></p3><br>
+  <button id="renew" onclick="renew()">Renew this room for another 24 hours</button>
   </div>
 </html>
