@@ -42,7 +42,7 @@ var roomConnectedUsers = {};
 //Key - room :: pair - how many hours are remaining for the room
 var roomLives = {};
 
-  app.get('/', function(req, res){
+  app.get('/chat', function(req, res){
         if(req.query.renewRoom != null){
             roomLives[removeQuotes(req.query.renewRoom)] = 24;
             console.log("Renewing room "  + removeQuotes(req.query.renewRoom));
@@ -50,26 +50,36 @@ var roomLives = {};
             return;
         }
 
+        if(req.query)
+
         if(req.query.createRoom != null){
           createRoom(removeQuotes(req.query.createRoom),
             removeQuotes(req.query.description),
             removeQuotes(req.query.lifetime));
             //Redirect the user to the room they just created
             res.statusCode = 302;
-            res.setHeader("Location", '/?room=' + req.query.createRoom + '"');
+            res.setHeader("Location", '/chat?room=' + req.query.createRoom + '"');
             res.end();
         }
         res.sendFile(__dirname + '/client.html');
   });
 
+  app.get('/', function(req, res){
+      res.sendFile(__dirname + '/home.html');
+  });
+
+  app.get('/new', function(req, res){
+      res.sendFile(__dirname + '/config.html');
+  });
+
     //TODO remove createroom default
     createRoom('developer', 'testing room for tests of testacular tests', 2);
-    expirationManager(); 
- 
+    expirationManager();
+
   io.on('connection', function(socket){
     socket.on('UserConnectionAttempt', function(room, nickname){
       //Meaninless debug
-      console.log('User ' + nickname + ' is attempting to connect to ' + 
+      console.log('User ' + nickname + ' is attempting to connect to ' +
         'room ' + room + ' from ip ' + socket.handshake.address);
       if(!hastableContains(roomList, room)){
         socket.emit('UserConnectionFailed', "roomNonExistant");
@@ -142,7 +152,7 @@ var roomLives = {};
           io.to(key).emit('OnRoomExpire');
         }
       };
-    }, 600000);  
+    }, 6000000);
   }
 
   function sendServerMessage(message, room){
@@ -157,7 +167,7 @@ var roomLives = {};
   }
 
   function getTimestamp(){
-    return new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '') 
+    return new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '')
   }
 
   function hastableContains(hastable, value){
