@@ -73,7 +73,7 @@ var roomLives = {};
   });
 
     //TODO remove createroom default
-    createRoom('developer', 'testing room for tests of testacular tests', 2);
+    createRoom('developer', 'testing room for tests of testacular tests', 6);
     expirationManager();
 
   io.on('connection', function(socket){
@@ -138,6 +138,7 @@ var roomLives = {};
   }
 
   function expirationManager(){
+    console.log('Creating a new instance of the expirationManager');
     setInterval(function(){
       console.log('Running the expiration cycle');
       for (var key in roomLives) {
@@ -151,8 +152,13 @@ var roomLives = {};
           delete roomConnectedUsers[key];
           io.to(key).emit('OnRoomExpire');
         }
+        else if(roomLives[key] == 2){
+          console.log('Room '  + key + ' is now renewable');
+          io.to(key).emit('canRenew');
+        }
       };
-    }, 6000000);
+      //two more 0s
+    }, 6000);
   }
 
   function sendServerMessage(message, room){
