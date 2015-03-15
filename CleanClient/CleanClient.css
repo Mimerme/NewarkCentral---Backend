@@ -1,0 +1,46 @@
+.left{
+  text-align: left;
+  padding-left: 15px;
+}
+.right{
+  text-align: right;
+  padding-right: 35px;
+}
+
+.message-form{
+  padding: 10px;
+}
+
+.message-input{
+  padding: 10px;
+  width: 90%;
+}
+
+.navbar-inverse{
+  background-image: linear-gradient(to bottom,#d3d3d3 0,#939393 100%);
+  border-color: #d3d3d3;
+}
+
+.navbar-inverse .navbar-nav>li>a{
+  color: #000;
+}
+
+.verticalLine-Left {
+    border-left: thin solid #696969;
+}
+
+.verticalLine-Right {
+    border-right: thin solid #696969;
+}
+
+form{
+  background: #000;
+  padding: 10px;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
+html, body{
+  overflow-x: hidden;
+}

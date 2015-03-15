@@ -25,7 +25,8 @@ to those whom it may concern server.js is the most up-to-date and complete early
 to index.js. Client.html's script was also a clean re-write early one
 that is all*/
 
-var app = require('express')();
+var express = require('express');
+var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var url = require('url');
@@ -41,6 +42,7 @@ var roomConnectedUsers = {};
 
 //Key - room :: pair - how many hours are remaining for the room
 var roomLives = {};
+  app.use(express.static(__dirname + '/CleanClient'));
 
   app.get('/chat', function(req, res){
         if(req.query.renewRoom != null){
@@ -61,7 +63,7 @@ var roomLives = {};
             res.setHeader("Location", '/chat?room=' + req.query.createRoom + '"');
             res.end();
         }
-        res.sendFile(__dirname + '/client.html');
+        res.sendFile(__dirname + '/CleanClient/CleanClient.html');
   });
 
   app.get('/', function(req, res){
@@ -73,7 +75,7 @@ var roomLives = {};
   });
 
     //TODO remove createroom default
-    createRoom('developer', 'testing room for tests of testacular tests', 6);
+    createRoom('developer', 'testing room for tests of testacular tests', 10);
     expirationManager();
 
   io.on('connection', function(socket){

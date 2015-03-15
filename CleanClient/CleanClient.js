@@ -1,61 +1,3 @@
-<!-- The MIT License (MIT)
-
-Copyright (c) [2015] [Andros Chu-Meng Yang]
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
- -->
-
-<!doctype html>
-<html>
-  <head>
-        <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
-        <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
-        <link rel="stylesheet" type="text/css" href="CSS/client.css">
-
-    <title>New chat</title>
-    <style>
-
-    </style>
-  </head>
-  <body>
-
-<div class="col-sm-1 col-md-1 sidebar box-content right">
-        <p1><b>Users in this chatroom</b></p1>
-          <ul class="nav nav-sidebar"  id='userList'>
-          </ul>
-        </div>
-<div class="col-sm-9 col-md-9 sidebar container-content right">
-  <ul id="messages"></ul>
-    </div>
-
-    <form action="">
-      <input id="m" autocomplete="off" /><button class="btn btn-lg btn-primary">Send</button>
-    </form>
-  </body>
-  <div id="description">
-  <p3><b>Description</b></p3><br>
-
-  </div>
-<script>
   var REDIRECT_URL = "localhost:5000";
   var URL = "localhost:5000"
 
@@ -105,7 +47,7 @@ SOFTWARE.
 
   //Server messages are a light-grey
   socket.on('serverMessage', function(msg){
-    $('#messages').append($('<li>').text(msg).css('color', '#848484'));
+    $('#roomMessages').append($('<li>').text(msg).css('color', '#848484'));
   });
 
   socket.on('init', function(chatLog, connectedUsers, desciption){
@@ -125,7 +67,7 @@ SOFTWARE.
         addUser(connectedUsers[user]);
       }
 
-      $("#description").append($('<p3>').text(desciption));
+      $("#roomDescription").append($('<p3>').text(desciption));
 
   });
 
@@ -136,7 +78,7 @@ SOFTWARE.
   socket.on('userLeave', function(updatedUserList, nickname){
     //TODO : Fix hacky method of handling user leaves
     //Reset the user list
-      $('#userList').empty();
+      $('#roomUsers').empty();
       //Re-add the users
       for(var user in updatedUserList){
         //Ignore all null values
@@ -146,11 +88,11 @@ SOFTWARE.
         }
         addUser(updatedUserList[user]);
       }
-      $('#messages').append($('<li>').text(nickname + " has left the room").css('color', '#848484'));
+      $('#roomMessages').append($('<li>').text(nickname + " has left the room").css('color', '#848484'));
   });
 
   socket.on('canRenew', function(){
-    $('#description').append('<button id="renew" onclick="renew()">Renew this room for another 24 hours</button>');
+    $('#roomDescription').append('<button id="renew" onclick="renew()">Renew this room for another 24 hours</button>');
   });
 
   function getUrlParameter(sParam)
@@ -169,14 +111,14 @@ SOFTWARE.
 
   //Only displays chat messages
   function displayMessage(msg, nick, timestamp){
-    $('#messages').append($('<li>').text(msg).append($('<div>').css({
+    $('#roomMessages').append($('<li>').text(msg).append($('<div>').css({
       'text-align': 'right',
        'opacity': 0.4
     }).text('Sent by '+ nick  + ' @ ' + timestamp)));
   }
 
   function addUser(nickname){
-    $('#userList').append($('<li>').text(nickname));
+    $('#roomUsers').append($('<li>').text(nickname));
   }
 
   function removeQuotes(string){
@@ -190,5 +132,3 @@ SOFTWARE.
     window.open("http://" + URL + '/?renewRoom="' + room + '"');
     //window.open("https://google.com");
   }
-</script>
-</html>
