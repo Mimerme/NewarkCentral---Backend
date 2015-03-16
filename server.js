@@ -43,6 +43,7 @@ var roomConnectedUsers = {};
 //Key - room :: pair - how many hours are remaining for the room
 var roomLives = {};
   app.use(express.static(__dirname + '/CleanClient'));
+  app.use(express.static(__dirname + '/public'));
 
   app.get('/chat', function(req, res){
         if(req.query.renewRoom != null){
@@ -157,8 +158,8 @@ var roomLives = {};
           io.to(key).emit('canRenew');
         }
       };
-      //two more 0s
-    }, 6000);
+      //remove two more 0s
+    }, 600000);
   }
 
   function sendServerMessage(message, room){

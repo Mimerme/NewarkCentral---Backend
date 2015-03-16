@@ -92,7 +92,7 @@
   });
 
   socket.on('canRenew', function(){
-    $('#roomDescription').append('<button id="renew" onclick="renew()">Renew this room for another 24 hours</button>');
+      $('#roomDescription').append('<button id="renew" onclick="renew()">Renew this room for another 24 hours</button>');
   });
 
   function getUrlParameter(sParam)
@@ -130,5 +130,6 @@
 
   function renew(){
     window.open("http://" + URL + '/chat?renewRoom="' + room + '"');
+    $('#renew').remove();
     //window.open("https://google.com");
   }

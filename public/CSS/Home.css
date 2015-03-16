@@ -1,0 +1,34 @@
+body{
+  background-color: #a8a8a8;
+}
+
+.left-icon-slides{
+  padding-left: 300px;
+  padding-top: 100px;
+}
+
+.carousel-caption{
+  position: relative;
+  bottom: 200px;
+  padding-top: 0px;
+}
+
+.large-p{
+  font-size: 25px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+
+.large-h{
+  font-size: 30px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+
+.btn-color-green{
+  background-image: linear-gradient(to bottom,#3EF218 0,#1E8610 100%);
+}
+
+.btn-color-blue{
+  background-image: linear-gradient(to bottom,#8997D6 0,#2585D4 100%);
+}
