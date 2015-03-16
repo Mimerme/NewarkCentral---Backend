@@ -44,3 +44,5 @@ form{
 html, body{
   overflow-x: hidden;
 }
+
+#roomMessages p:nth-child(odd) { background: #eee; }

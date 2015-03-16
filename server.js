@@ -52,8 +52,6 @@ var roomLives = {};
             return;
         }
 
-        if(req.query)
-
         if(req.query.createRoom != null){
           createRoom(removeQuotes(req.query.createRoom),
             removeQuotes(req.query.description),
@@ -169,7 +167,7 @@ var roomLives = {};
 
   function sendChatMessage(message, room, nickname){
     var timestamp = getTimestamp();
-    console.log(nickname + ' : ' + message + ' @ ' + timestamp);
+    //console.log(nickname + ' : ' + message + ' @ ' + timestamp);
     io.to(room).emit('chatMessage', message, nickname, timestamp);
     roomChatLogs[room].push(message + "," + nickname + "," + timestamp);
   }

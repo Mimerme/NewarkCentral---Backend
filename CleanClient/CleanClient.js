@@ -47,7 +47,7 @@
 
   //Server messages are a light-grey
   socket.on('serverMessage', function(msg){
-    $('#roomMessages').append($('<li>').text(msg).css('color', '#848484'));
+    $('#roomMessages').append($('<p>').text(msg).css('color', '#848484'));
   });
 
   socket.on('init', function(chatLog, connectedUsers, desciption){
@@ -88,7 +88,7 @@
         }
         addUser(updatedUserList[user]);
       }
-      $('#roomMessages').append($('<li>').text(nickname + " has left the room").css('color', '#848484'));
+      $('#roomMessages').append($('<p>').text(nickname + " has left the room").css('color', '#848484'));
   });
 
   socket.on('canRenew', function(){
@@ -111,14 +111,14 @@
 
   //Only displays chat messages
   function displayMessage(msg, nick, timestamp){
-    $('#roomMessages').append($('<li>').text(msg).append($('<div>').css({
+    $('#roomMessages').append($('<p>').text(msg).append($('<div>').css({
       'text-align': 'right',
        'opacity': 0.4
     }).text('Sent by '+ nick  + ' @ ' + timestamp)));
   }
 
   function addUser(nickname){
-    $('#roomUsers').append($('<li>').text(nickname));
+    $('#roomUsers').append($('<p>').text(nickname));
   }
 
   function removeQuotes(string){
@@ -129,6 +129,6 @@
   }
 
   function renew(){
-    window.open("http://" + URL + '/?renewRoom="' + room + '"');
+    window.open("http://" + URL + '/chat?renewRoom="' + room + '"');
     //window.open("https://google.com");
   }

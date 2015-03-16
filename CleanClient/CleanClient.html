@@ -16,8 +16,6 @@
 
     <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
 
-    <script src="CleanClient.js"></script>
-
 </head>
 
 <body>
@@ -53,22 +51,32 @@
   </nav>
 <center>
   <div class="row">
-    <div class="col-md-2 verticalLine-Right" id="roomUsers">
+    <div class="col-md-2 verticalLine-Right">
       <h4 class="left">Connected Users</h4>
+      <div id="roomUsers">
+
+      </div>
     </div>
-    <div class="col-md-8" id="roomMessages">
+    <div class="col-md-8">
       <h3>Messages</h3>
+      <div id="roomMessages">
+
+      </div>
     </div>
-    <div class="col-md-2 verticalLine-Left" id="roomDescription">
+    <div class="col-md-2 verticalLine-Left">
       <h4 class="right">Description</h4>
+      <div id="roomDescription">
+
+      </div>
     </div>
   </div>
 </center>
 
     <form action="" class="message-form">
           <input id="m" autocomplete="off" class="message-input">
-          <button class="btn btn-lg btn-primary" style="padding-left: 3.7%; padding-right: 3.7%;">Send</button>
+          <button type="submit" class="btn btn-lg btn-primary" style="padding-left: 3.7%; padding-right: 3.7%;">Send</button>
     </form>
 
 </body>
+<script src="CleanClient.js"></script>
 </html>
