@@ -24,3 +24,16 @@ body{
   padding-top: 0px;
   padding-bottom: 0px;
 }
+
+.white{
+  color: white;
+  text-shadow: 1px 2px #000;
+}
+
+.center{
+  vertical-align: middle;
+}
+
+.button-padding{
+  padding-top: 30px;
+}

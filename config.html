@@ -100,10 +100,9 @@ SOFTWARE. -->
 
     <script>
     var URL = "localhost:5000/chat?";
-    console.log(URL);
         $("#createRoom").click(function(){
             //console.log("http://" + URL + 'createRoom="' + $("#inputRoomName").val() + '&description="' + $("#inputDescription").val() + '"&lifetime=' + '"' + $("#roomDuration option:selected").val() + '"');
-            window.open("http://" + URL +'createRoom="' + $("#inputRoomName").val() + '&description="' + $("#inputDescription").val() + '"&lifetime=' + '"' + $("#roomDuration option:selected").val() + '"');
+            window.open('/chat?createRoom="' + $("#inputRoomName").val() + '&description="' + $("#inputDescription").val() + '"&lifetime=' + '"' + $("#roomDuration option:selected").val() + '"');
         });
     </script>
 
