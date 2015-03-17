@@ -3,8 +3,8 @@ body{
 }
 
 .left-icon-slides{
-  padding-left: 300px;
-  padding-top: 100px;
+  padding-left: 5%;
+  padding-top: 5%;
 }
 
 .carousel-caption{
@@ -14,21 +14,13 @@ body{
 }
 
 .large-p{
-  font-size: 25px;
+  font-size: 170%;
   padding-top: 0px;
   padding-bottom: 0px;
 }
 
 .large-h{
-  font-size: 30px;
+  font-size: 190%;
   padding-top: 0px;
   padding-bottom: 0px;
-}
-
-.btn-color-green{
-  background-image: linear-gradient(to bottom,#3EF218 0,#1E8610 100%);
-}
-
-.btn-color-blue{
-  background-image: linear-gradient(to bottom,#8997D6 0,#2585D4 100%);
 }
