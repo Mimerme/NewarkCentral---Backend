@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "Chat rooms with socket.io",
   "main": "server.js",
+  
   "dependencies": {
     "express": "^4.11.2",
     "socket.io": "^1.3.4"

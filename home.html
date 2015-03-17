@@ -27,22 +27,142 @@ SOFTWARE. -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="CSS/Home.css">
+        <link rel="shortcut icon" href="Images/logo_Icon_Small.png">
 
     <title>Stubs</title>
     <body>
+
+      <nav class="navbar navbar-inverse">
+          <div class="container-fluid">
+            <div class="navbar-header">
+              <a href="/">
+                <img src="Logo_Icon_Small.png" width="55px" height="55px"/>
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+            <li>
+              <a href="/">Home</a>
+            </li>
+            <li>
+              <a href="/new">Create Room</a>
+            </li>
+            <li>
+              <a href="/chat">Join Room</a>
+            </li>
+            <li>
+              <a href="https://github.com/Mimerme/NewChat">GitHub</a>
+            </li>
+            <li>
+              <a href="http://mimerme.github.io">About</a>
+            </li>
+          </ul>
+          </div>
+        </div>
+      </nav>
+
+      <div id="myCarousel" class="carousel slide">
+            <div class="carousel-inner">
+              <div class="item active">
+
+                <div class="left-icon-slides">
+                <img src="Images/trash-can.png" alt="Trash Can" width="300px" height="350px">
+                </div>
+
+                <div class="carousel-caption">
+                  <h4 class="large-h">Stubz is anonymous</h4>
+                  <p class="large-p">Each stub is completely anonymous, no data <br>
+                    about our users are  collected, sold, or given away. <br>
+                    Everything from the nicknames to the chat logs are all <br>
+                    purged when the room reaches its expiration<br>
+                  </p>
+                </div>
+              </div>
+
+              <div class="item">
+
+                <div class="left-icon-slides">
+                <img src="Images/octobiwan.png" alt="Fast" width="400px" height="350px">
+                </div>
+
+                <div class="carousel-caption">
+                  <h4 class="large-h">Stubz is free & open source</h4>
+                  <p class="large-p">Stubz is a free service for everyone <br>
+                    and is open source on Github as well.  <br>
+                    Check out the repository below<br>
+                  </p>
+                  <button type="button" class="btn btn-default" onclick="window.open('https://github.com/Mimerme/NewChat')">New Chat Repository </button>
+                </div>
+
+              </div>
+
+              <div class="item">
+
+                <div class="left-icon-slides">
+                <img src="Images/button-click.png" alt="Fast" width="400px" height="350px">
+                </div>
+
+                <div class="carousel-caption">
+                  <h4 class="large-h">Stubz is convinent</h4>
+                  <p class="large-p">Creating your own stub chatroom is just a few clicks away. <br>
+                    And joining a chat room just requires just a nickname and  <br>
+                    the room name, no more accounts and user passwords.<br>
+                  </p>
+                  <button type="button" class="btn btn-default" onclick="window.open('/new', '_self')">Create a room</button>
+                  <button type="button" class="btn btn-default" onclick="window.open('/chat', '_self')">Join a room</button>
+                </div>
+
+              </div>
+
+            </div>
+            <a class="left carousel-control" href="#myCarousel" data-slide="prev"></a>
+            <a class="right carousel-control" href="#myCarousel" data-slide="next"></a>
+          </div>
+
       <center>
-        <h1>Stubs</h1>
-        <b1>Stubs is a completly anonoymous chatting service that collects no <br>
-          data on its users and is easy and conviniant. There are plans for it <br>
-          to be feature packed with integration of additional applications as <br>
-          well as compelete customization, but Stubs is only in alpha testing<br>
-          and those features are just a few ways down the road.</b1>
-        <h2>How do you use Stubs?</h2>
-        <b2>1) Click 'New Room' and you will be redirected to a new page <br>
-          2) Enter the desired room name and description then click 'Create Room' <br>
-          3) Note that when you create your room you must choose how many hours you wish for the room to last<br>
-          4) When the room is 2 hours from expiring you will be allowed to renew the room for another 24 hours<br>
-          5) Now go communicate!</b2>
+          <br>
+          <h2 class="white">Steps to creating a new stub</h2>
+          <div class="col-md-4 center">
+            <h3 class="white">Step 1</h5>
+            <img src="Images/create_button.png" alt="Fast" width="150px" height="150px">
+            <p class="white button-padding">
+              Just click the create room button to start. <br>
+              You will be redirected to a new page where you<br>
+              can specify the options for your room<br>
+            </p>
+          </div>
+          <div class="col-md-4 center">
+            <h3 class="white">Step 2</h5>
+            <img src="Images/roomdata_button.png" alt="Fast" width="150px" height="150px">
+            <p class="white button-padding">
+              Specify the room name, description, as<br>
+              well as an optional password, and <br>
+              declare the time in hours you want your <br>
+              room to last. Don't worry, you can renew <br>
+              the room for another 24 hours if you so please
+            </p>
+          </div>
+          <div class="col-md-4 center">
+            <h3 class="white">Step 3</h5>
+            <img src="Images/example_button.png" alt="Fast" width="150px" height="150px">
+            <p class="white button-padding">
+              When you finally create your room you <br>
+              will be redirected to the room you just <br>
+              created. Specify the nickname an begin <br>
+              chatting with those in the lobby
+            </p>
+          </div>
       </center>
+
+  <footer>
+    <p style="font-size: 5px;">-</p>
+    <br>
+    <p>Website: <a href="http://mimerme.github.io">
+    mimerme.github.io</a>.</p>
+    <p>Maintainted by Andros (Mimerme) Yang</p>
+  </footer>
+
   </body>
+
 </html>

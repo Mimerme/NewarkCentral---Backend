@@ -1,0 +1,39 @@
+body{
+  background-color: #a8a8a8;
+}
+
+.left-icon-slides{
+  padding-left: 5%;
+  padding-top: 5%;
+}
+
+.carousel-caption{
+  position: relative;
+  bottom: 200px;
+  padding-top: 0px;
+}
+
+.large-p{
+  font-size: 170%;
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+
+.large-h{
+  font-size: 190%;
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+
+.white{
+  color: white;
+  text-shadow: 1px 2px #000;
+}
+
+.center{
+  vertical-align: middle;
+}
+
+.button-padding{
+  padding-top: 30px;
+}
