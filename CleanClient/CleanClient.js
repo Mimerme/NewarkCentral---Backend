@@ -25,6 +25,13 @@
       room = null;
       nick = null;
       //TODO : Redirect
+      location.reload();
+    }
+    else if(reason == "nicknameExists"){
+      alert("The nickname you are attemping to connect with is already in use");
+      room = null;
+      nick = null;
+      location.reload();
     }
   });
 

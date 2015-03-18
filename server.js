@@ -42,6 +42,7 @@ var roomConnectedUsers = {};
 
 //Key - room :: pair - how many hours are remaining for the room
 var roomLives = {};
+
   app.use(express.static(__dirname + '/CleanClient'));
   app.use(express.static(__dirname + '/public'));
 
@@ -82,6 +83,10 @@ var roomLives = {};
       //Meaninless debug
       console.log('User ' + nickname + ' is attempting to connect to ' +
         'room ' + room + ' from ip ' + socket.handshake.address);
+      if(roomConnectedUsers[room].indexOf(nickname) > -1){
+        socket.emit('UserConnectionFailed', "nicknameExists");
+        return;
+      }
       if(!hastableContains(roomList, room)){
         socket.emit('UserConnectionFailed', "roomNonExistant");
         return;

@@ -84,6 +84,11 @@ SOFTWARE.
       nick = null;
       //TODO : Redirect
     }
+    else if(reason == "nicknameExists"){
+      alert("The nickname you are attemping to connect with is already in use");
+      room = null;
+      nick = null;
+    }
   });
 
   socket.on('OnRoomExpire', function(){
