@@ -75,18 +75,24 @@ var roomLives = {};
   });
 
     //TODO remove createroom default
-    createRoom('developer', 'testing room for tests of testacular tests', 10);
+    createRoom('developer', 'Need help? Welcome to the developer chat room! ' +
+    'Here I test out new features ' +
+    'that are in development', 48);
     expirationManager();
 
   io.on('connection', function(socket){
     socket.on('UserConnectionAttempt', function(room, nickname){
-      //Meaninless debug
-      console.log('User ' + nickname + ' is attempting to connect to ' +
-        'room ' + room + ' from ip ' + socket.handshake.address);
+      //Meaningless debug
+      if(room == "" || nickname == ""){
+        return;
+      }
+
       if(roomConnectedUsers[room].indexOf(nickname) > -1){
         socket.emit('UserConnectionFailed', "nicknameExists");
         return;
       }
+      console.log('User ' + nickname + ' is attempting to connect to ' +
+        'room ' + room + ' from ip ' + socket.handshake.address);
       if(!hastableContains(roomList, room)){
         socket.emit('UserConnectionFailed', "roomNonExistant");
         return;

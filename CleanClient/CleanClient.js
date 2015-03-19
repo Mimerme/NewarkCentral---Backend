@@ -140,4 +140,4 @@
     //window.open("https://google.com");
   }
 
-  function roomURL(){alert(window.location.hostname + '/chat?room="' + room + '"');}
+  function roomURL(){window.prompt("Copy to clipboard: Ctrl+C, Enter", window.location.hostname + '/chat?room="' + room + '"');}
