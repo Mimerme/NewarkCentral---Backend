@@ -24,7 +24,6 @@
       alert("The room you are trying to join does not exist");
       room = null;
       nick = null;
-      //TODO : Redirect
       location.reload();
     }
     else if(reason == "nicknameExists"){
@@ -140,3 +139,5 @@
     $('#renew').remove();
     //window.open("https://google.com");
   }
+
+  function roomURL(){alert(window.location.hostname + '/chat?room="' + room + '"');}
