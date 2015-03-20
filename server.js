@@ -31,24 +31,42 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var url = require('url');
 
+//stores the rooms and their properties
+var rooms = {};
+
+//Complete test rewrite of easier to manage
+//room hastable values
+
+//rooms['roomname'].push
+
+//Hastable of room example
+/*{
+  description: 'description'
+  duration: 'duration'
+  password: 'password'
+  chatLog: []
+  users: []
+}
+*/
+
 //List of rooms and their descriptions
-var roomList = {};
+//var roomList = {};
 
 //key - room : pair - chatlog of room in array form
-var roomChatLogs = {};
+//var roomChatLogs = {};
 
 //Key - room : pair - array of user list for room
-var roomConnectedUsers = {};
+//var roomConnectedUsers = {};
 
 //Key - room :: pair - how many hours are remaining for the room
-var roomLives = {};
+//var roomLives = {};
 
   app.use(express.static(__dirname + '/CleanClient'));
   app.use(express.static(__dirname + '/public'));
 
   app.get('/chat', function(req, res){
         if(req.query.renewRoom != null){
-            roomLives[removeQuotes(req.query.renewRoom)] = 24;
+            rooms[removeQuotes(req.query.renewRoom)].duration = 24;
             console.log("Renewing room "  + removeQuotes(req.query.renewRoom));
             res.sendFile(__dirname + '/renew.html');
             return;
@@ -87,13 +105,13 @@ var roomLives = {};
         return;
       }
 
-      if(roomConnectedUsers[room].indexOf(nickname) > -1){
+      if(rooms[room].users.indexOf(nickname) > -1){
         socket.emit('UserConnectionFailed', "nicknameExists");
         return;
       }
       console.log('User ' + nickname + ' is attempting to connect to ' +
         'room ' + room + ' from ip ' + socket.handshake.address);
-      if(!hastableContains(roomList, room)){
+      if(!hastableContains(rooms, room)){
         socket.emit('UserConnectionFailed', "roomNonExistant");
         return;
       }
@@ -102,18 +120,19 @@ var roomLives = {};
       //Tell the room who has walked in ;)
       sendServerMessage(nickname + " has joined room " + room, room);
       io.to(room).emit('userJoin', nickname);
-      socket.emit('init', roomChatLogs[room], roomConnectedUsers[room], roomList[room]);
+      //Chat logs, users, description
+      socket.emit('init', rooms[room].chatLog, rooms[room].users, rooms[room].description);
       //get userList array and push
-      roomConnectedUsers[room].push(nickname);
+      rooms[room].users.push(nickname);
 
       socket.on('disconnect', function(){
         //if the room was already destroyed
-        if(roomConnectedUsers[room] == null)
+        if(rooms[room].users == null)
           return;
 
-        var userList = roomConnectedUsers[room];
+        var userList = rooms[room].users;
         userList = removeElement(nickname, userList);
-        roomConnectedUsers[room] = userList;
+        rooms[room].users = userList;
         io.to(room).emit('userLeave', userList, nickname);
       });
     });
@@ -122,23 +141,28 @@ var roomLives = {};
     });
 
   });
-//process.env.PORT is used by heroku
+//process.env.PORT is used by heroku to specify
+//what port to run the webapp on
   http.listen(process.env.PORT || 5000, function(){
     console.log('listening on port 5000');
   });
 
-  function createRoom(room, description, expiration){
-    if(expiration > 48)
-      expiration = 48;
+  function createRoom(mRoom, mDescription, mExpiration){
+    if(mExpiration > 48)
+    mExpiration = 48;
 
-    if(hastableContains(roomList, room))
+    if(hastableContains(rooms, mRoom))
       return;
 
-    console.log('Creating new room ' + room);
-    roomChatLogs[room] = [];
-    roomConnectedUsers[room] = [];
-    roomList[room] = description;
-    roomLives[room] = expiration;
+    console.log('Creating new room ' + mRoom);
+    var roomData = {
+      description: mDescription,
+      duration: mExpiration,
+      password: 'password',
+      chatLog: [],
+      users: []
+    };
+    rooms[mRoom] = roomData;
   }
 
   function removeElement(target, array){
@@ -153,18 +177,15 @@ var roomLives = {};
     console.log('Creating a new instance of the expirationManager');
     setInterval(function(){
       console.log('Running the expiration cycle');
-      for (var key in roomLives) {
-        roomLives[key] -= 1;
-        if(roomLives[key] <= 0){
+      for (var key in rooms) {
+        rooms[key].duration -= 1;
+        if(rooms[key].duration <= 0){
           console.log("Room " + key + " has expired");
           io.emit()
-          delete roomLives[key];
-          delete roomChatLogs[key];
-          delete roomList[key];
-          delete roomConnectedUsers[key];
+          delete rooms[key];
           io.to(key).emit('OnRoomExpire');
         }
-        else if(roomLives[key] == 2){
+        else if(rooms[key].duration == 2){
           console.log('Room '  + key + ' is now renewable');
           io.to(key).emit('canRenew');
         }
@@ -181,7 +202,7 @@ var roomLives = {};
     var timestamp = getTimestamp();
     //console.log(nickname + ' : ' + message + ' @ ' + timestamp);
     io.to(room).emit('chatMessage', message, nickname, timestamp);
-    roomChatLogs[room].push(message + "," + nickname + "," + timestamp);
+    rooms[room].chatLog.push(message + "," + nickname + "," + timestamp);
   }
 
   function getTimestamp(){
