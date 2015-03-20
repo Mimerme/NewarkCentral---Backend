@@ -45,4 +45,11 @@ html, body{
   overflow-x: hidden;
 }
 
+form button {
+  width: 9.5%;
+  background: rgb(130, 224, 255);
+  border: none;
+  padding: 10px;
+}
+
 #roomMessages p:nth-child(odd) { background: #eee; }
