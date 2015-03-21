@@ -171,13 +171,7 @@ setInterval(function() {
               lineOne += room + ":" + rooms[room].description + ";";
             }
 
-            fs.writeFile(__dirname + "/tmp/vars.txt", lineOne, function(err) {
-              if(err) {
-                return console.log(err);
-              }
-              sendChatMessage(lineOne, 'terminal', 'Server');
-              console.log("The file was saved!");
-            });
+            sendChatMessage(lineOne, 'terminal', 'Server');
             break;
           case '/dispose':
             console.log('Disposing of all save chatlogs and rooms');
