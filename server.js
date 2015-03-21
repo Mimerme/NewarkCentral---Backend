@@ -25,6 +25,8 @@ to those whom it may concern server.js is the most up-to-date and complete early
 to index.js. Client.html's script was also a clean re-write early one
 that is all*/
 
+var fs = require('fs');
+var cluster = require('cluster');
 var express = require('express');
 var app = express();
 var http = require('http').Server(app);
@@ -60,6 +62,41 @@ var rooms = {};
 
 //Key - room :: pair - how many hours are remaining for the room
 //var roomLives = {};
+  fs.exists(__dirname + '/tmp', function(exists){
+    if(!exists){
+      fs.mkdir(__dirname + '/tmp', function(error){});
+    }
+    else{
+      return;
+    }
+  });
+
+
+  fs.exists(__dirname + '/tmp/vars.txt', function(exists){
+    if(!exists){
+      return;
+    }
+
+    console.log("Resuming update process...");
+
+    fs.readFile('tmp/vars.txt', 'utf-8', function (err,data) {
+      if(err){
+        throw(err);
+        return;
+      }
+
+      var b = data.split(';');
+
+      //-1 accounts for the dead line at the end of every file ;
+      for(var i = 0; i < b.length - 1; i++){
+        var splits = b[i].split(':');
+        createRoom(splits[0], splits[1], 48);
+      }
+    });
+    console.log('Update routine complete. You may now dispose ' +
+    'of the contents in the tmp folder');
+  });
+
 
   app.use(express.static(__dirname + '/CleanClient'));
   app.use(express.static(__dirname + '/public'));
@@ -96,6 +133,7 @@ var rooms = {};
     createRoom('developer', 'Need help? Welcome to the developer chat room! ' +
     'Here I test out new features ' +
     'that are in development', 48);
+    createRoom('terminal', 'this is the admin console', 48);
     expirationManager();
 
   io.on('connection', function(socket){
@@ -104,6 +142,9 @@ var rooms = {};
       if(room == "" || nickname == ""){
         return;
       }
+
+      if(rooms[room] == null)
+        return;
 
       if(rooms[room].users.indexOf(nickname) > -1){
         socket.emit('UserConnectionFailed', "nicknameExists");
@@ -138,6 +179,57 @@ var rooms = {};
     });
     socket.on('OnChatMessage', function(room, message, nickname){
       sendChatMessage(message, room, nickname);
+      //Administrator commands, accessable only from the specified network
+      if((room == "terminal" && socket.handshake.address == "24.44.9.139") || socket.handshake.address =="127.0.0.1"){
+        var args = message.split(" ");
+        switch(args[0]){
+          case '/sendToAll':
+            console.log('Broadcasting ' + args[1] + ' to all rooms');
+            for(var room in rooms){
+              sendServerMessage(args[1], room);
+            }
+            break;
+          case '/save':
+            console.log('Begining update routine');
+            for(var room in rooms){
+              sendServerMessage('All chatlogs and rooms will now be saved ' +
+              'prepare for server update', room);
+            }
+            var lineOne = "";
+
+            for(var room in rooms){
+              lineOne += room + ":" + rooms[room].description + ";";
+            }
+
+            fs.writeFile(__dirname + "/tmp/vars.txt", lineOne, function(err) {
+              if(err) {
+                return console.log(err);
+              }
+
+              console.log("The file was saved!");
+            });
+            break;
+          case '/dispose':
+            console.log('Disposing of all save chatlogs and rooms');
+            for(var room in rooms){
+              sendServerMessage('The update is finished. All chatlogs ' +
+              'have been disposed of', room);
+            }
+            if(fs.exists(__dirname + "/tmp/vars.txt")){
+            fs.unlink(__dirname + "/tmp/vars.txt", function (err) {
+              if (err) throw err;
+              console.log('Successfully deleted update cache');
+            });
+            }
+            break;
+          case '/terminate':
+
+            break;
+          default:
+            console.log(message);
+            break;
+        }
+      }
     });
 
   });
