@@ -130,6 +130,7 @@ var rooms = {};
     'Here I test out new features ' +
     'that are in development', 48);
     createRoom('terminal', 'this is the admin console', 48);
+    createRoom('webapps', 'Welcome fellow redditors! Hope you enjoy this web application and leave a review in the comments', 48);
     expirationManager();
 
 //BEGIN CHAT SOCKET HANDLER
