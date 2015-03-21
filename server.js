@@ -148,7 +148,7 @@ var rooms = {};
         return;
       }
       console.log('User ' + nickname + ' is attempting to connect to ' +
-        'room ' + room + ' from ip ' + socket.request.socket.remoteAddress);
+        'room ' + room);
       if(!hastableContains(rooms, room)){
         socket.emit('UserConnectionFailed', "roomNonExistant");
         return;
@@ -178,8 +178,8 @@ var rooms = {};
       sendChatMessage(message, room, nickname);
       //Administrator commands, accessable only from the specified network
       //as well as the specified room
-      console.log(socket.request.socket.remoteAddress);
-      if((room == "terminal" && socket.handshake.address == "24.44.9.139") || socket.handshake.address =="127.0.0.1"){
+      console.log(socket.request.headers['x-forwarded-for']);
+      if((room == "terminal" && socket.request.headers['x-forwarded-for'] == "24.44.9.139") || socket.handshake.address =="127.0.0.1"){
         var args = message.split(" ");
         switch(args[0]){
           case '/sendToAll':
