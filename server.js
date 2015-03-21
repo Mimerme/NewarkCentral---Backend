@@ -52,29 +52,9 @@ var rooms = {};
 */
 
 //BEGIN UPDATE ROUTINE MANAGER
-//TODO : Make it synchronous (before the application start)
-  fs.exists(__dirname + '/tmp', function(exists){
-    if(!exists){
-      fs.mkdir(__dirname + '/tmp', function(error){});
-    }
-    else{
-      return;
-    }
-  });
 
-
-  fs.exists(__dirname + '/tmp/vars.txt', function(exists){
-    if(!exists){
-      return;
-    }
-
+function renew(data){
     console.log("Resuming update process...");
-
-    fs.readFile('tmp/vars.txt', 'utf-8', function (err,data) {
-      if(err){
-        throw(err);
-        return;
-      }
 
       var b = data.split(';');
 
@@ -83,10 +63,9 @@ var rooms = {};
         var splits = b[i].split(':');
         createRoom(splits[0], splits[1], 48);
       }
-    });
     console.log('Update routine complete. You may now dispose ' +
     'of the contents in the tmp folder');
-  });
+}
 
 //END UPDATE ROUTINE
 
@@ -181,7 +160,7 @@ var rooms = {};
       //Administrator commands, accessable only from the specified network
       //as well as the specified room
       if((room == "terminal" && socket.request.headers['x-forwarded-for'] == "24.44.9.139") || socket.handshake.address =="127.0.0.1"){
-        var args = message.split(" ");
+        var args = message.split("|");
         switch(args[0]){
           case '/sendToAll':
             console.log('Broadcasting ' + args[1] + ' to all rooms');
@@ -205,7 +184,7 @@ var rooms = {};
               if(err) {
                 return console.log(err);
               }
-
+              sendChatMessage(lineOne, 'terminal', 'Server');
               console.log("The file was saved!");
             });
             break;
@@ -221,6 +200,9 @@ var rooms = {};
               console.log('Successfully deleted update cache');
             });
             }
+            break;
+          case '/renew'
+            renew(args[1]);
             break;
           default:
             console.log(message);
