@@ -25,22 +25,22 @@ to those whom it may concern server.js is the most up-to-date and complete early
 to index.js. Client.html's script was also a clean re-write early one
 that is all*/
 
+//Library descriptions:
+//Needed to cache rooms on update routines
 var fs = require('fs');
-var cluster = require('cluster');
+//Cause you know, express.js
 var express = require('express');
+//utilization
 var app = express();
+//We need this for requests
 var http = require('http').Server(app);
+//Sockets for the server
 var io = require('socket.io')(http);
-var url = require('url');
 
 //stores the rooms and their properties
 var rooms = {};
 
-//Complete test rewrite of easier to manage
-//room hastable values
-
-//rooms['roomname'].push
-
+//rewrite of easier to manage room hastable values
 //Hastable of room example
 /*{
   description: 'description'
@@ -51,17 +51,8 @@ var rooms = {};
 }
 */
 
-//List of rooms and their descriptions
-//var roomList = {};
-
-//key - room : pair - chatlog of room in array form
-//var roomChatLogs = {};
-
-//Key - room : pair - array of user list for room
-//var roomConnectedUsers = {};
-
-//Key - room :: pair - how many hours are remaining for the room
-//var roomLives = {};
+//BEGIN UPDATE ROUTINE MANAGER
+//TODO : Make it synchronous (before the application start)
   fs.exists(__dirname + '/tmp', function(exists){
     if(!exists){
       fs.mkdir(__dirname + '/tmp', function(error){});
@@ -97,10 +88,13 @@ var rooms = {};
     'of the contents in the tmp folder');
   });
 
+//END UPDATE ROUTINE
 
+//TODO : Clean up files and folders, both are only here to easily develop the client
   app.use(express.static(__dirname + '/CleanClient'));
   app.use(express.static(__dirname + '/public'));
 
+//BEGIN REQUEST HANDLER
   app.get('/chat', function(req, res){
         if(req.query.renewRoom != null){
             rooms[removeQuotes(req.query.renewRoom)].duration = 24;
@@ -129,6 +123,8 @@ var rooms = {};
       res.sendFile(__dirname + '/config.html');
   });
 
+  //END REQUEST HANDLER
+
     //TODO remove createroom default
     createRoom('developer', 'Need help? Welcome to the developer chat room! ' +
     'Here I test out new features ' +
@@ -136,6 +132,7 @@ var rooms = {};
     createRoom('terminal', 'this is the admin console', 48);
     expirationManager();
 
+//BEGIN CHAT SOCKET HANDLER
   io.on('connection', function(socket){
     socket.on('UserConnectionAttempt', function(room, nickname){
       //Meaningless debug
@@ -151,7 +148,7 @@ var rooms = {};
         return;
       }
       console.log('User ' + nickname + ' is attempting to connect to ' +
-        'room ' + room + ' from ip ' + socket.handshake.address);
+        'room ' + room + ' from ip ' + socket.manager.handshaken[socket.id].remoteAddressaddress);
       if(!hastableContains(rooms, room)){
         socket.emit('UserConnectionFailed', "roomNonExistant");
         return;
@@ -180,7 +177,9 @@ var rooms = {};
     socket.on('OnChatMessage', function(room, message, nickname){
       sendChatMessage(message, room, nickname);
       //Administrator commands, accessable only from the specified network
-      if((room == "terminal" && socket.handshake.address == "24.44.9.139") || socket.handshake.address =="127.0.0.1"){
+      //as well as the specified room
+      console.log(socket.manager.handshaken[socket.id].remoteAddress);
+      if((room == "terminal" && socket.manager.handshaken[socket.id].remoteAddress == "24.44.9.139") || socket.handshake.address =="127.0.0.1"){
         var args = message.split(" ");
         switch(args[0]){
           case '/sendToAll':
@@ -222,9 +221,6 @@ var rooms = {};
             });
             }
             break;
-          case '/terminate':
-
-            break;
           default:
             console.log(message);
             break;
@@ -233,6 +229,8 @@ var rooms = {};
     });
 
   });
+
+  //END CHAT SOCKET HANDLER
 //process.env.PORT is used by heroku to specify
 //what port to run the webapp on
   http.listen(process.env.PORT || 5000, function(){
