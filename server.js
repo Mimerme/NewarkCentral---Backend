@@ -58,20 +58,6 @@ setInterval(function() {
     http.get("http://fierce-hamlet-7533.herokuapp.com");
 }, 300000);
 
-function renew(data){
-    console.log("Resuming update process...");
-
-      var b = data.split(';');
-
-      //-1 accounts for the dead line at the end of every file ;
-      for(var i = 0; i < b.length - 1; i++){
-        var splits = b[i].split(':');
-        createRoom(splits[0], splits[1], 48);
-      }
-    console.log('Update routine complete. You may now dispose ' +
-    'of the contents in the tmp folder');
-}
-
 //END UPDATE ROUTINE
 
 //TODO : Clean up files and folders, both are only here to easily develop the client
@@ -206,7 +192,7 @@ function renew(data){
             });
             }
             break;
-          case '/renew'
+          case '/renew':
             renew(args[1]);
             break;
           default:
@@ -296,4 +282,19 @@ function renew(data){
       return;
 
    return string.replace(new RegExp('"', 'g'), '');
+  }
+
+
+  function renew(data){
+      console.log("Resuming update process...");
+
+        var b = data.split(';');
+
+        //-1 accounts for the dead line at the end of every file ;
+        for(var i = 0; i < b.length - 1; i++){
+          var splits = b[i].split(':');
+          createRoom(splits[0], splits[1], 48);
+        }
+      console.log('Update routine complete. You may now dispose ' +
+      'of the contents in the tmp folder');
   }
