@@ -136,7 +136,12 @@ var rooms = {};
   io.on('connection', function(socket){
     socket.on('UserConnectionAttempt', function(room, nickname){
       //Meaningless debug
-      if(room == "" || nickname == ""){
+      if(room == null || nickname == null){
+        return;
+      }
+
+      if(!hastableContains(rooms, room)){
+        socket.emit('UserConnectionFailed', "roomNonExistant");
         return;
       }
 
@@ -149,10 +154,6 @@ var rooms = {};
       }
       console.log('User ' + nickname + ' is attempting to connect to ' +
         'room ' + room);
-      if(!hastableContains(rooms, room)){
-        socket.emit('UserConnectionFailed', "roomNonExistant");
-        return;
-      }
 
       socket.join(room);
       //Tell the room who has walked in ;)
@@ -178,7 +179,6 @@ var rooms = {};
       sendChatMessage(message, room, nickname);
       //Administrator commands, accessable only from the specified network
       //as well as the specified room
-      console.log(socket.request.headers['x-forwarded-for']);
       if((room == "terminal" && socket.request.headers['x-forwarded-for'] == "24.44.9.139") || socket.handshake.address =="127.0.0.1"){
         var args = message.split(" ");
         switch(args[0]){

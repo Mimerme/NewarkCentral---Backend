@@ -11,14 +11,21 @@
 
   if(room == null){
     room = prompt("Enter the room you wish to join");
+    if(room == null){
+      alert('Room name cannot be left blank');
+    }
   }
   if(nick == null){
     nick = prompt("Enter the nickname you wish to use");
+    if(room == null){
+      alert('Nickname cannot be left blank');
+    }
   }
 
   var socket = io();
 
   socket.on('UserConnectionFailed', function(reason){
+    console.log(reason);
     if(reason == "roomNonExistant"){
       //If room is nonexistant then retry the connection to another room
       alert("The room you are trying to join does not exist");
