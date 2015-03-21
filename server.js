@@ -53,6 +53,11 @@ var rooms = {};
 
 //BEGIN UPDATE ROUTINE MANAGER
 
+//Workaround heroku's 1 hr idle period
+setInterval(function() {
+    http.get("http://fierce-hamlet-7533.herokuapp.com");
+}, 300000);
+
 function renew(data){
     console.log("Resuming update process...");
 
