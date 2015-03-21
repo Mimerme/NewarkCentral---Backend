@@ -37,6 +37,8 @@ var http = require('http').Server(app);
 //Sockets for the server
 var io = require('socket.io')(http);
 
+var get = require('http');
+
 //stores the rooms and their properties
 var rooms = {};
 
@@ -52,10 +54,9 @@ var rooms = {};
 */
 
 //BEGIN UPDATE ROUTINE MANAGER
-
 //Workaround heroku's 1 hr idle period
 setInterval(function() {
-    http.get("http://fierce-hamlet-7533.herokuapp.com");
+    get.get("http://fierce-hamlet-7533.herokuapp.com");
 }, 300000);
 
 //END UPDATE ROUTINE
