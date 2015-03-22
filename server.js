@@ -56,7 +56,7 @@ var rooms = {};
 //BEGIN UPDATE ROUTINE MANAGER
 //Workaround heroku's 1 hr idle period
 setInterval(function() {
-    get.get("www.stubz.tk");
+    get.get("http://www.stubz.tk");
 }, 300000);
 
 //END UPDATE ROUTINE
