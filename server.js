@@ -56,7 +56,7 @@ var rooms = {};
 //BEGIN UPDATE ROUTINE MANAGER
 //Workaround heroku's 1 hr idle period
 setInterval(function() {
-    get.get("http://fierce-hamlet-7533.herokuapp.com");
+    get.get("www.stubz.tk");
 }, 300000);
 
 //END UPDATE ROUTINE
@@ -97,11 +97,11 @@ setInterval(function() {
   //END REQUEST HANDLER
 
     //TODO remove createroom default
-    createRoom('developer', 'Need help? Welcome to the developer chat room! ' +
+    createRoomSpecial('developer', 'Need help? Welcome to the developer chat room! ' +
     'Here I test out new features ' +
-    'that are in development', 48);
-    createRoom('terminal', 'this is the admin console', 48);
-    createRoom('webapps', 'Welcome fellow redditors! Hope you enjoy this web application and leave a review in the comments', 48);
+    'that are in development');
+    createRoomSpecial('terminal', 'this is the admin console');
+    createRoomSpecial('webapps', 'Welcome fellow redditors! Hope you enjoy this web application and leave a review in the comments');
     expirationManager();
 
 //BEGIN CHAT SOCKET HANDLER
@@ -217,6 +217,22 @@ setInterval(function() {
     var roomData = {
       description: mDescription,
       duration: mExpiration,
+      password: 'password',
+      chatLog: [],
+      users: []
+    };
+    rooms[mRoom] = roomData;
+  }
+
+  function createRoomSpecial(mRoom, mDescription){
+
+    if(hastableContains(rooms, mRoom))
+      return;
+
+    console.log('Creating new special room ' + mRoom);
+    var roomData = {
+      description: mDescription,
+      duration: 999999999999999,
       password: 'password',
       chatLog: [],
       users: []
