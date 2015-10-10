@@ -191,6 +191,10 @@ setInterval(function() {
       else{
         console.log(nickname);
 
+        if(nickname === "!xxxxxx"){
+          name = "Mr.Mayor"
+        }
+
         //Meaningless debug
         if(room == null || nickname == null){
           return;
