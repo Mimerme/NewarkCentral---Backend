@@ -6,27 +6,19 @@
   var nick;
   var socketID;
 
-
-  function makeid()
-  {
-      var text = "";
-      var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-      for( var i=0; i < 5; i++ )
-          text += possible.charAt(Math.floor(Math.random() * possible.length));
-
-      return text;
-  }
-
   room = removeQuotes(getUrlParameter('room'));
-  nick = makeid();
-
-
+  nick = removeQuotes(getUrlParameter('nickname'));
 
   if(room == null){
     room = prompt("Enter the room you wish to join");
     if(room == null){
       alert('Room name cannot be left blank');
+    }
+  }
+  if(nick == null){
+    nick = prompt("Enter the nickname you wish to use");
+    if(room == null){
+      alert('Nickname cannot be left blank');
     }
   }
 

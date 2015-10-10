@@ -79,6 +79,7 @@ setInterval(function() {
 
 //TODO : Clean up files and folders, both are only here to easily develop the client
   app.use(express.static(__dirname + '/CleanClient'));
+  app.use(express.static(__dirname + '/CleanClient/Official'));
   app.use(express.static(__dirname + '/public'));
 
 //BEGIN REQUEST HANDLER
@@ -119,7 +120,7 @@ setInterval(function() {
             res.setHeader("Location", '/chat?room=' + req.query.createRoom + '"');
             res.end();
         }
-        res.sendFile(__dirname + '/CleanClient/CleanClientOfficial.html');
+        res.sendFile(__dirname + '/CleanClient/Official/CleanClient.html');
   });
 
   app.get('/', function(req, res){
@@ -147,6 +148,7 @@ setInterval(function() {
     socket.on('UserConnectionAttempt', function(room, nickname){
       //check if user is an official
       //TODO: check
+      console.log(nickname);
       if(nickname.indexOf("!") === 0){
         db.collection('users').find({"nickCode": nickname.replace("!", "")}).forEach(function(u) {
           if(u.nickname !== null || typeof u.nickname !== 'undefined'){
