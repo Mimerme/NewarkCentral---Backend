@@ -72,7 +72,7 @@ MongoClient.connect("mongodb://newark:mememachine123@ds042138.mongolab.com:42138
 //BEGIN UPDATE ROUTINE MANAGER
 //Workaround heroku's 1 hr idle period
 setInterval(function() {
-    get.get("http://www.stubz.tk");
+    get.get("http://newarkcentral.herokuapp.com");
 }, 300000);
 
 //END UPDATE ROUTINE
