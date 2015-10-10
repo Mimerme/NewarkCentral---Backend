@@ -149,50 +149,11 @@ setInterval(function() {
       //check if user is an official
       //TODO: check
       console.log(nickname);
-      if(nickname.indexOf("!") === 0){
-        db.collection('users').find({"nickCode": nickname.replace("!", "")}).forEach(function(u) {
-          if(u.nickname !== null || typeof u.nickname !== 'undefined'){
-            nickname = u.nickname;
-            console.log(u.nickname);
 
-            console.log(nickname);
-
-            //Meaningless debug
-            if(room == null || nickname == null){
-              return;
-            }
-
-            if(!hastableContains(rooms, room)){
-              socket.emit('UserConnectionFailed', "roomNonExistant");
-              return;
-            }
-
-            if(rooms[room] == null)
-              return;
-
-            if(rooms[room].users.indexOf(nickname) > -1){
-              socket.emit('UserConnectionFailed', "nicknameExists");
-              return;
-            }
-            console.log('User ' + nickname + ' is attempting to connect to ' +
-              'room ' + room);
-
-            socket.join(room);
-            //Tell the room who has walked in ;)
-            sendServerMessage(nickname + " has joined room " + room, room);
-            io.to(room).emit('userJoin', nickname);
-            //Chat logs, users, description
-            socket.emit('init', rooms[room].chatLog, rooms[room].users, rooms[room].description);
-            //get userList array and push
-            rooms[room].users.push(nickname);
-          }
-          });
-      }
-      else{
         console.log(nickname);
 
         if(nickname === "!xxxxxx"){
-          name = "Mr.Mayor"
+          nickname = "Mr.Mayor"
         }
 
         //Meaningless debug
@@ -223,7 +184,6 @@ setInterval(function() {
         socket.emit('init', rooms[room].chatLog, rooms[room].users, rooms[room].description);
         //get userList array and push
         rooms[room].users.push(nickname);
-      }
 
       socket.on('disconnect', function(){
         //if the room was already destroyed
