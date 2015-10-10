@@ -17,12 +17,11 @@
 }
 
 .navbar-inverse{
-  background-image: linear-gradient(to bottom,#d3d3d3 0,#939393 100%);
   border-color: #d3d3d3;
 }
 
 .navbar-inverse .navbar-nav>li>a{
-  color: #000;
+  color: #ffffff;
 }
 
 .verticalLine-Left {
@@ -32,7 +31,13 @@
 .verticalLine-Right {
     border-right: thin solid #696969;
 }
-
+@font-face{
+	font-family:roboto;
+	src="Roboto-Thin.ttf";
+}
+html{
+	font-family:roboto;
+}
 form{
   background: #000;
   padding: 10px;

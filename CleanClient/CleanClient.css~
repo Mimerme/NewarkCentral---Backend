@@ -1,0 +1,57 @@
+.left{
+  text-align: left;
+  padding-left: 15px;
+}
+.right{
+  text-align: right;
+  padding-right: 35px;
+}
+
+.message-form{
+  padding: 10px;
+}
+
+.message-input{
+  padding: 10px;
+  width: 90%;
+}
+
+.navbar-inverse{
+  border-color: #d3d3d3;
+}
+
+.navbar-inverse .navbar-nav>li>a{
+  color: #ffffff;
+}
+
+.verticalLine-Left {
+    border-left: thin solid #696969;
+}
+
+.verticalLine-Right {
+    border-right: thin solid #696969;
+}
+@font-face{
+	font-family:roboto;
+	src="Roboto-Thin.ttf";
+}
+form{
+  background: #000;
+  padding: 10px;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
+html, body{
+  overflow-x: hidden;
+}
+
+form button {
+  width: 9.5%;
+  background: rgb(130, 224, 255);
+  border: none;
+  padding: 10px;
+}
+
+#roomMessages p:nth-child(odd) { background: #eee; }

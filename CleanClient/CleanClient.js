@@ -128,6 +128,8 @@
       'text-align': 'right',
        'opacity': 0.4
     }).text('Sent by '+ nick  + ' @ ' + timestamp)));
+    console.log("New message");
+    $("#roomMessages").animate({ scrollTop: $(document).height() }, "slow");
   }
 
   function addUser(nickname){

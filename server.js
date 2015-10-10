@@ -28,6 +28,7 @@ that is all*/
 //Library descriptions:
 //Needed to cache rooms on update routines
 var fs = require('fs');
+var MongoClient = require("mongodb").MongoClient;
 //Cause you know, express.js
 var express = require('express');
 //utilization
@@ -42,6 +43,9 @@ var get = require('http');
 //stores the rooms and their properties
 var rooms = {};
 
+//Result in instant kick
+var bannedWords = ["fuck", "bitch, btich", "nigger", "nigga", "fucker", "fuckboy", "fux", "fuk"];
+
 //rewrite of easier to manage room hastable values
 //Hastable of room example
 /*{
@@ -52,6 +56,18 @@ var rooms = {};
   users: []
 }
 */
+
+MongoClient.connect("mongodb://newark:mememachine123@ds042138.mongolab.com:42138/newark", function (err, database) {
+    if (err) {
+        console.log("There was a problem trying to connect to the database " +
+        "the application has bene terminated");
+        throw err;
+    } else {
+      db = database;
+        console.log("successfully connected to the database");
+
+    }
+});
 
 //BEGIN UPDATE ROUTINE MANAGER
 //Workaround heroku's 1 hr idle period
@@ -86,6 +102,26 @@ setInterval(function() {
         res.sendFile(__dirname + '/CleanClient/CleanClient.html');
   });
 
+  app.get('/chatOfficial', function(req, res){
+        if(req.query.renewRoom != null){
+            rooms[removeQuotes(req.query.renewRoom)].duration = 24;
+            console.log("Renewing room "  + removeQuotes(req.query.renewRoom));
+            res.sendFile(__dirname + '/renew.html');
+            return;
+        }
+
+        if(req.query.createRoom != null){
+          createRoom(removeQuotes(req.query.createRoom),
+            removeQuotes(req.query.description),
+            removeQuotes(req.query.lifetime));
+            //Redirect the user to the room they just created
+            res.statusCode = 302;
+            res.setHeader("Location", '/chat?room=' + req.query.createRoom + '"');
+            res.end();
+        }
+        res.sendFile(__dirname + '/CleanClient/CleanClientOfficial.html');
+  });
+
   app.get('/', function(req, res){
       res.sendFile(__dirname + '/home.html');
   });
@@ -97,48 +133,97 @@ setInterval(function() {
   //END REQUEST HANDLER
 
     //TODO remove createroom default
-    createRoomSpecial('developer', 'Need help? Welcome to the developer chat room! ' +
-    'Here I test out new features ' +
-    'that are in development');
-    createRoomSpecial('terminal', 'this is the admin console');
-    createRoomSpecial('webapps', 'Welcome fellow redditors! Hope you enjoy this web application and leave a review in the comments');
-    expirationManager();
+    createRoomSpecial('Newark', 'Welcome to the newark hub! Ask for help and other general questions about the city. Great for tourists!');
+    createRoomSpecial('AskTheMayor', 'Ask the mayor anything, from political to personal issues.');
+    createRoomSpecial('Jobs', 'Look for jobs thoughout the city, and see who responds');
+    createRoomSpecial('Community', 'Discussions within the Newark community');
+    createRoomSpecial('Transportation', "Discuss and ask quetions about the city's public transportation systems");
+    createRoomSpecial('Education', "Discuss and ask quetions about the city's education systems");
+    createRoomSpecial('Debate', "Debate controversial issues ");
 
 //BEGIN CHAT SOCKET HANDLER
   io.on('connection', function(socket){
     socket.on('UserConnectionAttempt', function(room, nickname){
-      //Meaningless debug
-      if(room == null || nickname == null){
-        return;
+      //check if user is an official
+      //TODO: check
+      if(nickname.indexOf("!") === 0){
+        db.collection('users').find({"nickCode": nickname.replace("!", "")}).forEach(function(u) {
+          if(u.nickname !== null || typeof u.nickname !== 'undefined'){
+            nickname = u.nickname;
+            console.log(u.nickname);
+
+            console.log(nickname);
+
+            //Meaningless debug
+            if(room == null || nickname == null){
+              return;
+            }
+
+            if(!hastableContains(rooms, room)){
+              socket.emit('UserConnectionFailed', "roomNonExistant");
+              return;
+            }
+
+            if(rooms[room] == null)
+              return;
+
+            if(rooms[room].users.indexOf(nickname) > -1){
+              socket.emit('UserConnectionFailed', "nicknameExists");
+              return;
+            }
+            console.log('User ' + nickname + ' is attempting to connect to ' +
+              'room ' + room);
+
+            socket.join(room);
+            //Tell the room who has walked in ;)
+            sendServerMessage(nickname + " has joined room " + room, room);
+            io.to(room).emit('userJoin', nickname);
+            //Chat logs, users, description
+            socket.emit('init', rooms[room].chatLog, rooms[room].users, rooms[room].description);
+            //get userList array and push
+            rooms[room].users.push(nickname);
+          }
+          });
       }
+      else{
+        console.log(nickname);
 
-      if(!hastableContains(rooms, room)){
-        socket.emit('UserConnectionFailed', "roomNonExistant");
-        return;
+        //Meaningless debug
+        if(room == null || nickname == null){
+          return;
+        }
+
+        if(!hastableContains(rooms, room)){
+          socket.emit('UserConnectionFailed', "roomNonExistant");
+          return;
+        }
+
+        if(rooms[room] == null)
+          return;
+
+        if(rooms[room].users.indexOf(nickname) > -1){
+          socket.emit('UserConnectionFailed', "nicknameExists");
+          return;
+        }
+        console.log('User ' + nickname + ' is attempting to connect to ' +
+          'room ' + room);
+
+        socket.join(room);
+        //Tell the room who has walked in ;)
+        sendServerMessage(nickname + " has joined room " + room, room);
+        io.to(room).emit('userJoin', nickname);
+        //Chat logs, users, description
+        socket.emit('init', rooms[room].chatLog, rooms[room].users, rooms[room].description);
+        //get userList array and push
+        rooms[room].users.push(nickname);
       }
-
-      if(rooms[room] == null)
-        return;
-
-      if(rooms[room].users.indexOf(nickname) > -1){
-        socket.emit('UserConnectionFailed', "nicknameExists");
-        return;
-      }
-      console.log('User ' + nickname + ' is attempting to connect to ' +
-        'room ' + room);
-
-      socket.join(room);
-      //Tell the room who has walked in ;)
-      sendServerMessage(nickname + " has joined room " + room, room);
-      io.to(room).emit('userJoin', nickname);
-      //Chat logs, users, description
-      socket.emit('init', rooms[room].chatLog, rooms[room].users, rooms[room].description);
-      //get userList array and push
-      rooms[room].users.push(nickname);
 
       socket.on('disconnect', function(){
         //if the room was already destroyed
-        if(rooms[room].users == null)
+        if(typeof rooms[room] === "undefined")
+          return;
+
+        if(rooms[room].user == null)
           return;
 
         var userList = rooms[room].users;
@@ -148,6 +233,13 @@ setInterval(function() {
       });
     });
     socket.on('OnChatMessage', function(room, message, nickname){
+      var r = message.split(" ");
+      for (var i = 0; i < r.length; i++) {
+        if(bannedWords.indexOf(r) > -1){
+          console.log("Filter: " + bannedWords[message]);
+          return;
+        }
+      }
       sendChatMessage(message, room, nickname);
       //Administrator commands, accessable only from the specified network
       //as well as the specified room
