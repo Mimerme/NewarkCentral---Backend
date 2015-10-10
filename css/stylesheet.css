@@ -1,0 +1,119 @@
+html{
+  height:100%;
+  width:100%;
+  background-image:url("http://www.livability.com/sites/default/files/Newark%20Skyline%20from%20the%20Newark%20Club%20-Harry%20Prott.jpg");
+  background-size: cover;
+}
+body{
+  margin:0;
+  padding:0;
+}
+/*classes*/
+.x{
+  position: absolute;
+  right:10px;
+  top:0;
+  height:20px;
+  width:3px;
+  background-color:white;
+}
+.channel_names{
+  font-size:2em;
+  font-family: mainfont;
+  color:white;
+  white-space: nowrap;
+}
+/*fonts*/
+@font-face {
+    font-family: mainfont;
+    src:url("../font/Roboto-Thin.ttf");
+}
+/*IDS*/
+#logo_sidebar{
+  height:100px;
+  width:100px;
+
+}
+#close{
+  cursor: pointer;
+}
+#x1{
+  transform: rotate(45deg);
+}
+#x2{
+  transform: rotate(-45deg);
+}
+#join_button_text{
+  font-family:mainfont;
+  font-size:2em;
+  color:white;
+  text-shadow: 2px 2px darkblue;
+}
+#join_button{
+  cursor:pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  height:80px;
+  width:200px;
+  /*background-color:#00CCFF;*/
+  background-color:#0066CC;
+  border-radius: 0.2em;
+  border:solid #003D7A;
+}
+#text_container{
+  z-index: 5;
+  display:flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height:100%;
+}
+#title{
+  font-size:4em;
+}
+#text_pitch{
+  color:white;
+  text-shadow: 2px 2px black;
+  font-size:4em;
+}
+#logo_container{
+  width:100%;
+  display:flex;
+  align-items: center;
+  justify-content: center;
+}
+#text_title{
+  color:white;
+  text-shadow: 2px 2px black;
+}
+
+#sidebar{
+  height:100%;
+  position:absolute;
+  width:0%;
+  left:0;
+  background-color:rgba(102, 102, 153,0.5)
+}
+#title,#pitch{
+  font-family: mainfont;
+  color:white;
+}
+#blackdotoverlay{
+  background-image:url("../images/backgroundhelper.png");
+  background-repeat:repeat;
+  z-index: -1;
+}
+#whiteoverlay{
+  background-color:black;
+  opacity: 0.5;
+  z-index: -2;
+}
+#whiteoverlay,#blackdotoverlay{
+
+  position:absolute;
+  width:100%;
+  height:100%;
+
+}
